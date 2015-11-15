@@ -1,0 +1,7 @@
+//main with if statement (matched and unmatched)
+
+main: function integer () = {
+	yoyo: function string (a: array [] string, p: integer) = {
+		header: string = "huh";
+	}
+}

@@ -1,0 +1,12 @@
+//too many else
+
+
+hey : function integer () = {
+	if(1){
+
+	}else{
+
+	}else{
+	
+	}
+}

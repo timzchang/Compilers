@@ -1,0 +1,10 @@
+//An actual cminor program?
+
+
+main: function integer () = {
+	
+}
+
+square: function integer ( x: integer ) = {
+	return x^2;
+}

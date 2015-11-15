@@ -1,0 +1,6 @@
+//a for loop
+
+i: integer;
+	for( i=0;i<size;i++) {
+		print a[i], "\n";
+	}

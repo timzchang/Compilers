@@ -1,0 +1,8 @@
+//What did steph curry say to draymond after the warriors won the nba finals?
+
+say: function void(x:integer) = {
+	i: integer;
+	for( i=0;i<x;i++) {
+		print "We out", "\n";
+	}
+}

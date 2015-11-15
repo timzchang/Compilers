@@ -1,0 +1,5 @@
+//incorrect array declaration
+
+main: function integer (argc: integer, argv: array [] string) = {
+	arr: str [] array;
+}

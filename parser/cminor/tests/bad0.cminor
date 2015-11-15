@@ -1,0 +1,3 @@
+//extra semicolon
+
+a: array [] integer = {1};;

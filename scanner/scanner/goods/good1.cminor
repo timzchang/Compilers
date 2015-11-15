@@ -1,0 +1,4 @@
+//should return all valid characters
+
+
+h<=: "hey y\na"

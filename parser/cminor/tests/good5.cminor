@@ -1,0 +1,7 @@
+// main with function declaration
+
+main: function integer () = {
+	yoyo: function string (a: array [] string, p: integer) = {
+		header: string = "huh";
+	}
+}

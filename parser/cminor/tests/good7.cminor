@@ -1,0 +1,8 @@
+//main with function calls and nested functions 
+
+main: function integer () = {
+	yoyo: function string (a: array [] string, p: integer) = {
+
+	}
+	yoyo(a,p,d,1+1);
+}

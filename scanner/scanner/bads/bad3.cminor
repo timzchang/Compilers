@@ -1,0 +1,7 @@
+//should fail on period.
+//I am going to write the linux kernel from scratch
+
+
+int main(){
+	My life is in shambles.
+}

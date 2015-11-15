@@ -1,0 +1,9 @@
+// main with for loop and array declaration and print 
+
+main: function integer () = {
+	for(i=5; i<4; i++){
+		flim: array [3] integer;
+		flam: array [4] char = {1,2,3,4};
+	}
+	print "hello world";
+}

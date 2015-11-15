@@ -1,0 +1,4 @@
+//yet another valid file
+
+c: char = 'a';
+if(c=='a')

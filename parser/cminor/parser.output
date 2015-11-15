@@ -1,0 +1,2238 @@
+Terminals which are not used
+
+   TOKEN_WHILE
+   NOT_TOKEN
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: decl_list
+
+    2 decl_list: decl decl_list
+    3          | /* empty */
+
+    4 decl: ident TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON
+    5     | ident TOKEN_COLON type TOKEN_SEMICOLON
+    6     | ident TOKEN_COLON type TOKEN_ASSGN stmt_block
+    7     | ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    8 type: TOKEN_STRING
+    9     | TOKEN_INT
+   10     | TOKEN_CHAR
+   11     | TOKEN_BOOLEAN
+   12     | TOKEN_ARRAY TOKEN_LBRACE opt_expr TOKEN_RBRACE type
+   13     | TOKEN_FUNCTION type TOKEN_LPAREN param_list TOKEN_RPAREN
+   14     | TOKEN_VOID
+
+   15 param_list: n_param_list
+   16           | /* empty */
+
+   17 n_param_list: param
+   18             | param TOKEN_COMMA n_param_list
+
+   19 param: ident TOKEN_COLON type
+
+   20 ident: TOKEN_IDENT
+
+   21 stmt_list: stmt stmt_list
+   22          | /* empty */
+
+   23 stmt: stmt_matched
+   24     | n_stmt_matched
+
+   25 stmt_matched: decl
+   26             | expr TOKEN_SEMICOLON
+   27             | TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   28             | TOKEN_RETURN opt_expr TOKEN_SEMICOLON
+   29             | TOKEN_PRINT expr_list TOKEN_SEMICOLON
+   30             | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE stmt_matched
+   31             | stmt_block
+
+   32 stmt_block: TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE
+
+   33 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt
+   34               | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE n_stmt_matched
+   35               | TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+   36 opt_expr: expr
+   37         | /* empty */
+
+   38 expr_list: n_expr_list
+   39          | /* empty */
+
+   40 n_expr_list: expr TOKEN_COMMA n_expr_list
+   41            | expr
+
+   42 expr: expr TOKEN_ASSGN expr_not_assgn
+   43     | expr_not_assgn
+
+   44 expr_not_assgn: expr_not_assgn TOKEN_OR expr_and
+   45               | expr_and
+
+   46 expr_and: expr_and TOKEN_AND expr_comp
+   47         | expr_comp
+
+   48 expr_comp: expr_comp TOKEN_LE expr_arith
+   49          | expr_comp TOKEN_GE expr_arith
+   50          | expr_comp TOKEN_LT expr_arith
+   51          | expr_comp TOKEN_GT expr_arith
+   52          | expr_comp TOKEN_EQ expr_arith
+   53          | expr_comp TOKEN_NE expr_arith
+   54          | expr_arith
+
+   55 expr_arith: expr_arith TOKEN_ADD expr_geom
+   56           | expr_arith TOKEN_SUB expr_geom
+   57           | expr_geom
+
+   58 expr_geom: expr_geom TOKEN_MULT expr_exp
+   59          | expr_geom TOKEN_DIV expr_exp
+   60          | expr_geom TOKEN_MOD expr_exp
+   61          | expr_exp
+
+   62 expr_exp: expr_exp TOKEN_EXP expr_unary
+   63         | expr_unary
+
+   64 expr_unary: TOKEN_NOT expr_unary
+   65           | TOKEN_NEGATION expr_unary
+   66           | expr_incr
+
+   67 expr_incr: expr_grouping TOKEN_INCREMENT
+   68          | expr_grouping TOKEN_DECREMENT
+   69          | expr_grouping
+
+   70 expr_grouping: TOKEN_LPAREN expr TOKEN_RPAREN
+   71              | ident TOKEN_LBRACE expr TOKEN_RBRACE
+   72              | ident TOKEN_LPAREN expr_list TOKEN_RPAREN
+   73              | expr_primary
+
+   74 expr_primary: TOKEN_INT_LITERAL
+   75             | ident
+   76             | TOKEN_CHAR_LITERAL
+   77             | TOKEN_TRUE
+   78             | TOKEN_FALSE
+   79             | TOKEN_STRING_LITERAL
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+TOKEN_IDENT (258) 20
+TOKEN_STRING (259) 8
+TOKEN_STRING_LITERAL (260) 79
+TOKEN_INT (261) 9
+TOKEN_INT_LITERAL (262) 74
+TOKEN_IF (263) 30 33 34
+TOKEN_ARRAY (264) 12
+TOKEN_BOOLEAN (265) 11
+TOKEN_CHAR (266) 10
+TOKEN_CHAR_LITERAL (267) 76
+TOKEN_ELSE (268) 30 34
+TOKEN_FALSE (269) 78
+TOKEN_FOR (270) 27 35
+TOKEN_FUNCTION (271) 13
+TOKEN_PRINT (272) 29
+TOKEN_RETURN (273) 28
+TOKEN_TRUE (274) 77
+TOKEN_VOID (275) 14
+TOKEN_WHILE (276)
+TOKEN_ADD (277) 55
+TOKEN_SUB (278) 56
+TOKEN_MULT (279) 58
+TOKEN_DIV (280) 59
+TOKEN_MOD (281) 60
+TOKEN_EXP (282) 62
+TOKEN_INCREMENT (283) 67
+TOKEN_DECREMENT (284) 68
+TOKEN_NEGATION (285) 65
+TOKEN_GT (286) 51
+TOKEN_GE (287) 49
+TOKEN_EQ (288) 52
+TOKEN_LE (289) 48
+TOKEN_LT (290) 50
+TOKEN_AND (291) 46
+TOKEN_OR (292) 44
+TOKEN_NE (293) 53
+TOKEN_ASSGN (294) 4 6 7 42
+TOKEN_SEMICOLON (295) 4 5 7 26 27 28 29 35
+TOKEN_COLON (296) 4 5 6 7 19
+TOKEN_LPAREN (297) 13 27 30 33 34 35 70 72
+TOKEN_RPAREN (298) 13 27 30 33 34 35 70 72
+TOKEN_LBRACE (299) 12 71
+TOKEN_RBRACE (300) 12 71
+TOKEN_LCURLBRACE (301) 7 32
+TOKEN_RCURLBRACE (302) 7 32
+TOKEN_COMMA (303) 18 40
+TOKEN_NOT (304) 64
+NOT_TOKEN (305)
+
+
+Nonterminals, with rules where they appear
+
+$accept (51)
+    on left: 0
+program (52)
+    on left: 1, on right: 0
+decl_list (53)
+    on left: 2 3, on right: 1 2
+decl (54)
+    on left: 4 5 6 7, on right: 2 25
+type (55)
+    on left: 8 9 10 11 12 13 14, on right: 4 5 6 7 12 13 19
+param_list (56)
+    on left: 15 16, on right: 13
+n_param_list (57)
+    on left: 17 18, on right: 15 18
+param (58)
+    on left: 19, on right: 17 18
+ident (59)
+    on left: 20, on right: 4 5 6 7 19 71 72 75
+stmt_list (60)
+    on left: 21 22, on right: 21 32
+stmt (61)
+    on left: 23 24, on right: 21 33
+stmt_matched (62)
+    on left: 25 26 27 28 29 30 31, on right: 23 27 30 34
+stmt_block (63)
+    on left: 32, on right: 6 31
+n_stmt_matched (64)
+    on left: 33 34 35, on right: 24 34 35
+opt_expr (65)
+    on left: 36 37, on right: 12 27 28 35
+expr_list (66)
+    on left: 38 39, on right: 29 72
+n_expr_list (67)
+    on left: 40 41, on right: 7 38 40
+expr (68)
+    on left: 42 43, on right: 4 26 30 33 34 36 40 41 42 70 71
+expr_not_assgn (69)
+    on left: 44 45, on right: 42 43 44
+expr_and (70)
+    on left: 46 47, on right: 44 45 46
+expr_comp (71)
+    on left: 48 49 50 51 52 53 54, on right: 46 47 48 49 50 51 52 53
+expr_arith (72)
+    on left: 55 56 57, on right: 48 49 50 51 52 53 54 55 56
+expr_geom (73)
+    on left: 58 59 60 61, on right: 55 56 57 58 59 60
+expr_exp (74)
+    on left: 62 63, on right: 58 59 60 61 62
+expr_unary (75)
+    on left: 64 65 66, on right: 62 63 64 65
+expr_incr (76)
+    on left: 67 68 69, on right: 66
+expr_grouping (77)
+    on left: 70 71 72 73, on right: 67 68 69
+expr_primary (78)
+    on left: 74 75 76 77 78 79, on right: 73
+
+
+state 0
+
+    0 $accept: . program $end
+
+    TOKEN_IDENT  shift, and go to state 1
+
+    $default  reduce using rule 3 (decl_list)
+
+    program    go to state 2
+    decl_list  go to state 3
+    decl       go to state 4
+    ident      go to state 5
+
+
+state 1
+
+   20 ident: TOKEN_IDENT .
+
+    $default  reduce using rule 20 (ident)
+
+
+state 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 6
+
+
+state 3
+
+    1 program: decl_list .
+
+    $default  reduce using rule 1 (program)
+
+
+state 4
+
+    2 decl_list: decl . decl_list
+
+    TOKEN_IDENT  shift, and go to state 1
+
+    $default  reduce using rule 3 (decl_list)
+
+    decl_list  go to state 7
+    decl       go to state 4
+    ident      go to state 5
+
+
+state 5
+
+    4 decl: ident . TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON
+    5     | ident . TOKEN_COLON type TOKEN_SEMICOLON
+    6     | ident . TOKEN_COLON type TOKEN_ASSGN stmt_block
+    7     | ident . TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    TOKEN_COLON  shift, and go to state 8
+
+
+state 6
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 7
+
+    2 decl_list: decl decl_list .
+
+    $default  reduce using rule 2 (decl_list)
+
+
+state 8
+
+    4 decl: ident TOKEN_COLON . type TOKEN_ASSGN expr TOKEN_SEMICOLON
+    5     | ident TOKEN_COLON . type TOKEN_SEMICOLON
+    6     | ident TOKEN_COLON . type TOKEN_ASSGN stmt_block
+    7     | ident TOKEN_COLON . type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    TOKEN_STRING    shift, and go to state 9
+    TOKEN_INT       shift, and go to state 10
+    TOKEN_ARRAY     shift, and go to state 11
+    TOKEN_BOOLEAN   shift, and go to state 12
+    TOKEN_CHAR      shift, and go to state 13
+    TOKEN_FUNCTION  shift, and go to state 14
+    TOKEN_VOID      shift, and go to state 15
+
+    type  go to state 16
+
+
+state 9
+
+    8 type: TOKEN_STRING .
+
+    $default  reduce using rule 8 (type)
+
+
+state 10
+
+    9 type: TOKEN_INT .
+
+    $default  reduce using rule 9 (type)
+
+
+state 11
+
+   12 type: TOKEN_ARRAY . TOKEN_LBRACE opt_expr TOKEN_RBRACE type
+
+    TOKEN_LBRACE  shift, and go to state 17
+
+
+state 12
+
+   11 type: TOKEN_BOOLEAN .
+
+    $default  reduce using rule 11 (type)
+
+
+state 13
+
+   10 type: TOKEN_CHAR .
+
+    $default  reduce using rule 10 (type)
+
+
+state 14
+
+   13 type: TOKEN_FUNCTION . type TOKEN_LPAREN param_list TOKEN_RPAREN
+
+    TOKEN_STRING    shift, and go to state 9
+    TOKEN_INT       shift, and go to state 10
+    TOKEN_ARRAY     shift, and go to state 11
+    TOKEN_BOOLEAN   shift, and go to state 12
+    TOKEN_CHAR      shift, and go to state 13
+    TOKEN_FUNCTION  shift, and go to state 14
+    TOKEN_VOID      shift, and go to state 15
+
+    type  go to state 18
+
+
+state 15
+
+   14 type: TOKEN_VOID .
+
+    $default  reduce using rule 14 (type)
+
+
+state 16
+
+    4 decl: ident TOKEN_COLON type . TOKEN_ASSGN expr TOKEN_SEMICOLON
+    5     | ident TOKEN_COLON type . TOKEN_SEMICOLON
+    6     | ident TOKEN_COLON type . TOKEN_ASSGN stmt_block
+    7     | ident TOKEN_COLON type . TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    TOKEN_ASSGN      shift, and go to state 19
+    TOKEN_SEMICOLON  shift, and go to state 20
+
+
+state 17
+
+   12 type: TOKEN_ARRAY TOKEN_LBRACE . opt_expr TOKEN_RBRACE type
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 37 (opt_expr)
+
+    ident           go to state 29
+    opt_expr        go to state 30
+    expr            go to state 31
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 18
+
+   13 type: TOKEN_FUNCTION type . TOKEN_LPAREN param_list TOKEN_RPAREN
+
+    TOKEN_LPAREN  shift, and go to state 42
+
+
+state 19
+
+    4 decl: ident TOKEN_COLON type TOKEN_ASSGN . expr TOKEN_SEMICOLON
+    6     | ident TOKEN_COLON type TOKEN_ASSGN . stmt_block
+    7     | ident TOKEN_COLON type TOKEN_ASSGN . TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 43
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    stmt_block      go to state 44
+    expr            go to state 45
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 20
+
+    5 decl: ident TOKEN_COLON type TOKEN_SEMICOLON .
+
+    $default  reduce using rule 5 (decl)
+
+
+state 21
+
+   79 expr_primary: TOKEN_STRING_LITERAL .
+
+    $default  reduce using rule 79 (expr_primary)
+
+
+state 22
+
+   74 expr_primary: TOKEN_INT_LITERAL .
+
+    $default  reduce using rule 74 (expr_primary)
+
+
+state 23
+
+   76 expr_primary: TOKEN_CHAR_LITERAL .
+
+    $default  reduce using rule 76 (expr_primary)
+
+
+state 24
+
+   78 expr_primary: TOKEN_FALSE .
+
+    $default  reduce using rule 78 (expr_primary)
+
+
+state 25
+
+   77 expr_primary: TOKEN_TRUE .
+
+    $default  reduce using rule 77 (expr_primary)
+
+
+state 26
+
+   65 expr_unary: TOKEN_NEGATION . expr_unary
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_unary     go to state 46
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 27
+
+   70 expr_grouping: TOKEN_LPAREN . expr TOKEN_RPAREN
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    expr            go to state 47
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 28
+
+   64 expr_unary: TOKEN_NOT . expr_unary
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_unary     go to state 48
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 29
+
+   71 expr_grouping: ident . TOKEN_LBRACE expr TOKEN_RBRACE
+   72              | ident . TOKEN_LPAREN expr_list TOKEN_RPAREN
+   75 expr_primary: ident .
+
+    TOKEN_LPAREN  shift, and go to state 49
+    TOKEN_LBRACE  shift, and go to state 50
+
+    $default  reduce using rule 75 (expr_primary)
+
+
+state 30
+
+   12 type: TOKEN_ARRAY TOKEN_LBRACE opt_expr . TOKEN_RBRACE type
+
+    TOKEN_RBRACE  shift, and go to state 51
+
+
+state 31
+
+   36 opt_expr: expr .
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN  shift, and go to state 52
+
+    $default  reduce using rule 36 (opt_expr)
+
+
+state 32
+
+   43 expr: expr_not_assgn .
+   44 expr_not_assgn: expr_not_assgn . TOKEN_OR expr_and
+
+    TOKEN_OR  shift, and go to state 53
+
+    $default  reduce using rule 43 (expr)
+
+
+state 33
+
+   45 expr_not_assgn: expr_and .
+   46 expr_and: expr_and . TOKEN_AND expr_comp
+
+    TOKEN_AND  shift, and go to state 54
+
+    $default  reduce using rule 45 (expr_not_assgn)
+
+
+state 34
+
+   47 expr_and: expr_comp .
+   48 expr_comp: expr_comp . TOKEN_LE expr_arith
+   49          | expr_comp . TOKEN_GE expr_arith
+   50          | expr_comp . TOKEN_LT expr_arith
+   51          | expr_comp . TOKEN_GT expr_arith
+   52          | expr_comp . TOKEN_EQ expr_arith
+   53          | expr_comp . TOKEN_NE expr_arith
+
+    TOKEN_GT  shift, and go to state 55
+    TOKEN_GE  shift, and go to state 56
+    TOKEN_EQ  shift, and go to state 57
+    TOKEN_LE  shift, and go to state 58
+    TOKEN_LT  shift, and go to state 59
+    TOKEN_NE  shift, and go to state 60
+
+    $default  reduce using rule 47 (expr_and)
+
+
+state 35
+
+   54 expr_comp: expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 54 (expr_comp)
+
+
+state 36
+
+   57 expr_arith: expr_geom .
+   58 expr_geom: expr_geom . TOKEN_MULT expr_exp
+   59          | expr_geom . TOKEN_DIV expr_exp
+   60          | expr_geom . TOKEN_MOD expr_exp
+
+    TOKEN_MULT  shift, and go to state 63
+    TOKEN_DIV   shift, and go to state 64
+    TOKEN_MOD   shift, and go to state 65
+
+    $default  reduce using rule 57 (expr_arith)
+
+
+state 37
+
+   61 expr_geom: expr_exp .
+   62 expr_exp: expr_exp . TOKEN_EXP expr_unary
+
+    TOKEN_EXP  shift, and go to state 66
+
+    $default  reduce using rule 61 (expr_geom)
+
+
+state 38
+
+   63 expr_exp: expr_unary .
+
+    $default  reduce using rule 63 (expr_exp)
+
+
+state 39
+
+   66 expr_unary: expr_incr .
+
+    $default  reduce using rule 66 (expr_unary)
+
+
+state 40
+
+   67 expr_incr: expr_grouping . TOKEN_INCREMENT
+   68          | expr_grouping . TOKEN_DECREMENT
+   69          | expr_grouping .
+
+    TOKEN_INCREMENT  shift, and go to state 67
+    TOKEN_DECREMENT  shift, and go to state 68
+
+    $default  reduce using rule 69 (expr_incr)
+
+
+state 41
+
+   73 expr_grouping: expr_primary .
+
+    $default  reduce using rule 73 (expr_grouping)
+
+
+state 42
+
+   13 type: TOKEN_FUNCTION type TOKEN_LPAREN . param_list TOKEN_RPAREN
+
+    TOKEN_IDENT  shift, and go to state 1
+
+    $default  reduce using rule 16 (param_list)
+
+    param_list    go to state 69
+    n_param_list  go to state 70
+    param         go to state 71
+    ident         go to state 72
+
+
+state 43
+
+    7 decl: ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE . n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+   32 stmt_block: TOKEN_LCURLBRACE . stmt_list TOKEN_RCURLBRACE
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 22 (stmt_list)
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt_list       go to state 80
+    stmt            go to state 81
+    stmt_matched    go to state 82
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 84
+    n_expr_list     go to state 85
+    expr            go to state 86
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 44
+
+    6 decl: ident TOKEN_COLON type TOKEN_ASSGN stmt_block .
+
+    $default  reduce using rule 6 (decl)
+
+
+state 45
+
+    4 decl: ident TOKEN_COLON type TOKEN_ASSGN expr . TOKEN_SEMICOLON
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN      shift, and go to state 52
+    TOKEN_SEMICOLON  shift, and go to state 87
+
+
+state 46
+
+   65 expr_unary: TOKEN_NEGATION expr_unary .
+
+    $default  reduce using rule 65 (expr_unary)
+
+
+state 47
+
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+   70 expr_grouping: TOKEN_LPAREN expr . TOKEN_RPAREN
+
+    TOKEN_ASSGN   shift, and go to state 52
+    TOKEN_RPAREN  shift, and go to state 88
+
+
+state 48
+
+   64 expr_unary: TOKEN_NOT expr_unary .
+
+    $default  reduce using rule 64 (expr_unary)
+
+
+state 49
+
+   72 expr_grouping: ident TOKEN_LPAREN . expr_list TOKEN_RPAREN
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 39 (expr_list)
+
+    ident           go to state 29
+    expr_list       go to state 89
+    n_expr_list     go to state 90
+    expr            go to state 91
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 50
+
+   71 expr_grouping: ident TOKEN_LBRACE . expr TOKEN_RBRACE
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    expr            go to state 92
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 51
+
+   12 type: TOKEN_ARRAY TOKEN_LBRACE opt_expr TOKEN_RBRACE . type
+
+    TOKEN_STRING    shift, and go to state 9
+    TOKEN_INT       shift, and go to state 10
+    TOKEN_ARRAY     shift, and go to state 11
+    TOKEN_BOOLEAN   shift, and go to state 12
+    TOKEN_CHAR      shift, and go to state 13
+    TOKEN_FUNCTION  shift, and go to state 14
+    TOKEN_VOID      shift, and go to state 15
+
+    type  go to state 93
+
+
+state 52
+
+   42 expr: expr TOKEN_ASSGN . expr_not_assgn
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    expr_not_assgn  go to state 94
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 53
+
+   44 expr_not_assgn: expr_not_assgn TOKEN_OR . expr_and
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_and       go to state 95
+    expr_comp      go to state 34
+    expr_arith     go to state 35
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 54
+
+   46 expr_and: expr_and TOKEN_AND . expr_comp
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_comp      go to state 96
+    expr_arith     go to state 35
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 55
+
+   51 expr_comp: expr_comp TOKEN_GT . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 97
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 56
+
+   49 expr_comp: expr_comp TOKEN_GE . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 98
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 57
+
+   52 expr_comp: expr_comp TOKEN_EQ . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 99
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 58
+
+   48 expr_comp: expr_comp TOKEN_LE . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 100
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 59
+
+   50 expr_comp: expr_comp TOKEN_LT . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 101
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 60
+
+   53 expr_comp: expr_comp TOKEN_NE . expr_arith
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_arith     go to state 102
+    expr_geom      go to state 36
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 61
+
+   55 expr_arith: expr_arith TOKEN_ADD . expr_geom
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_geom      go to state 103
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 62
+
+   56 expr_arith: expr_arith TOKEN_SUB . expr_geom
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_geom      go to state 104
+    expr_exp       go to state 37
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 63
+
+   58 expr_geom: expr_geom TOKEN_MULT . expr_exp
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_exp       go to state 105
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 64
+
+   59 expr_geom: expr_geom TOKEN_DIV . expr_exp
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_exp       go to state 106
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 65
+
+   60 expr_geom: expr_geom TOKEN_MOD . expr_exp
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_exp       go to state 107
+    expr_unary     go to state 38
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 66
+
+   62 expr_exp: expr_exp TOKEN_EXP . expr_unary
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident          go to state 29
+    expr_unary     go to state 108
+    expr_incr      go to state 39
+    expr_grouping  go to state 40
+    expr_primary   go to state 41
+
+
+state 67
+
+   67 expr_incr: expr_grouping TOKEN_INCREMENT .
+
+    $default  reduce using rule 67 (expr_incr)
+
+
+state 68
+
+   68 expr_incr: expr_grouping TOKEN_DECREMENT .
+
+    $default  reduce using rule 68 (expr_incr)
+
+
+state 69
+
+   13 type: TOKEN_FUNCTION type TOKEN_LPAREN param_list . TOKEN_RPAREN
+
+    TOKEN_RPAREN  shift, and go to state 109
+
+
+state 70
+
+   15 param_list: n_param_list .
+
+    $default  reduce using rule 15 (param_list)
+
+
+state 71
+
+   17 n_param_list: param .
+   18             | param . TOKEN_COMMA n_param_list
+
+    TOKEN_COMMA  shift, and go to state 110
+
+    $default  reduce using rule 17 (n_param_list)
+
+
+state 72
+
+   19 param: ident . TOKEN_COLON type
+
+    TOKEN_COLON  shift, and go to state 111
+
+
+state 73
+
+   30 stmt_matched: TOKEN_IF . TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE stmt_matched
+   33 n_stmt_matched: TOKEN_IF . TOKEN_LPAREN expr TOKEN_RPAREN stmt
+   34               | TOKEN_IF . TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE n_stmt_matched
+
+    TOKEN_LPAREN  shift, and go to state 112
+
+
+state 74
+
+   27 stmt_matched: TOKEN_FOR . TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR . TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_LPAREN  shift, and go to state 113
+
+
+state 75
+
+   29 stmt_matched: TOKEN_PRINT . expr_list TOKEN_SEMICOLON
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 39 (expr_list)
+
+    ident           go to state 29
+    expr_list       go to state 114
+    n_expr_list     go to state 90
+    expr            go to state 91
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 76
+
+   28 stmt_matched: TOKEN_RETURN . opt_expr TOKEN_SEMICOLON
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 37 (opt_expr)
+
+    ident           go to state 29
+    opt_expr        go to state 115
+    expr            go to state 31
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 77
+
+   32 stmt_block: TOKEN_LCURLBRACE . stmt_list TOKEN_RCURLBRACE
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 22 (stmt_list)
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt_list       go to state 80
+    stmt            go to state 81
+    stmt_matched    go to state 82
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 84
+    expr            go to state 116
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 78
+
+   25 stmt_matched: decl .
+
+    $default  reduce using rule 25 (stmt_matched)
+
+
+state 79
+
+    4 decl: ident . TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON
+    5     | ident . TOKEN_COLON type TOKEN_SEMICOLON
+    6     | ident . TOKEN_COLON type TOKEN_ASSGN stmt_block
+    7     | ident . TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON
+   71 expr_grouping: ident . TOKEN_LBRACE expr TOKEN_RBRACE
+   72              | ident . TOKEN_LPAREN expr_list TOKEN_RPAREN
+   75 expr_primary: ident .
+
+    TOKEN_COLON   shift, and go to state 8
+    TOKEN_LPAREN  shift, and go to state 49
+    TOKEN_LBRACE  shift, and go to state 50
+
+    $default  reduce using rule 75 (expr_primary)
+
+
+state 80
+
+   32 stmt_block: TOKEN_LCURLBRACE stmt_list . TOKEN_RCURLBRACE
+
+    TOKEN_RCURLBRACE  shift, and go to state 117
+
+
+state 81
+
+   21 stmt_list: stmt . stmt_list
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 22 (stmt_list)
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt_list       go to state 118
+    stmt            go to state 81
+    stmt_matched    go to state 82
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 84
+    expr            go to state 116
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 82
+
+   23 stmt: stmt_matched .
+
+    $default  reduce using rule 23 (stmt)
+
+
+state 83
+
+   31 stmt_matched: stmt_block .
+
+    $default  reduce using rule 31 (stmt_matched)
+
+
+state 84
+
+   24 stmt: n_stmt_matched .
+
+    $default  reduce using rule 24 (stmt)
+
+
+state 85
+
+    7 decl: ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list . TOKEN_RCURLBRACE TOKEN_SEMICOLON
+
+    TOKEN_RCURLBRACE  shift, and go to state 119
+
+
+state 86
+
+   26 stmt_matched: expr . TOKEN_SEMICOLON
+   40 n_expr_list: expr . TOKEN_COMMA n_expr_list
+   41            | expr .
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN      shift, and go to state 52
+    TOKEN_SEMICOLON  shift, and go to state 120
+    TOKEN_COMMA      shift, and go to state 121
+
+    $default  reduce using rule 41 (n_expr_list)
+
+
+state 87
+
+    4 decl: ident TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON .
+
+    $default  reduce using rule 4 (decl)
+
+
+state 88
+
+   70 expr_grouping: TOKEN_LPAREN expr TOKEN_RPAREN .
+
+    $default  reduce using rule 70 (expr_grouping)
+
+
+state 89
+
+   72 expr_grouping: ident TOKEN_LPAREN expr_list . TOKEN_RPAREN
+
+    TOKEN_RPAREN  shift, and go to state 122
+
+
+state 90
+
+   38 expr_list: n_expr_list .
+
+    $default  reduce using rule 38 (expr_list)
+
+
+state 91
+
+   40 n_expr_list: expr . TOKEN_COMMA n_expr_list
+   41            | expr .
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN  shift, and go to state 52
+    TOKEN_COMMA  shift, and go to state 121
+
+    $default  reduce using rule 41 (n_expr_list)
+
+
+state 92
+
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+   71 expr_grouping: ident TOKEN_LBRACE expr . TOKEN_RBRACE
+
+    TOKEN_ASSGN   shift, and go to state 52
+    TOKEN_RBRACE  shift, and go to state 123
+
+
+state 93
+
+   12 type: TOKEN_ARRAY TOKEN_LBRACE opt_expr TOKEN_RBRACE type .
+
+    $default  reduce using rule 12 (type)
+
+
+state 94
+
+   42 expr: expr TOKEN_ASSGN expr_not_assgn .
+   44 expr_not_assgn: expr_not_assgn . TOKEN_OR expr_and
+
+    TOKEN_OR  shift, and go to state 53
+
+    $default  reduce using rule 42 (expr)
+
+
+state 95
+
+   44 expr_not_assgn: expr_not_assgn TOKEN_OR expr_and .
+   46 expr_and: expr_and . TOKEN_AND expr_comp
+
+    TOKEN_AND  shift, and go to state 54
+
+    $default  reduce using rule 44 (expr_not_assgn)
+
+
+state 96
+
+   46 expr_and: expr_and TOKEN_AND expr_comp .
+   48 expr_comp: expr_comp . TOKEN_LE expr_arith
+   49          | expr_comp . TOKEN_GE expr_arith
+   50          | expr_comp . TOKEN_LT expr_arith
+   51          | expr_comp . TOKEN_GT expr_arith
+   52          | expr_comp . TOKEN_EQ expr_arith
+   53          | expr_comp . TOKEN_NE expr_arith
+
+    TOKEN_GT  shift, and go to state 55
+    TOKEN_GE  shift, and go to state 56
+    TOKEN_EQ  shift, and go to state 57
+    TOKEN_LE  shift, and go to state 58
+    TOKEN_LT  shift, and go to state 59
+    TOKEN_NE  shift, and go to state 60
+
+    $default  reduce using rule 46 (expr_and)
+
+
+state 97
+
+   51 expr_comp: expr_comp TOKEN_GT expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 51 (expr_comp)
+
+
+state 98
+
+   49 expr_comp: expr_comp TOKEN_GE expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 49 (expr_comp)
+
+
+state 99
+
+   52 expr_comp: expr_comp TOKEN_EQ expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 52 (expr_comp)
+
+
+state 100
+
+   48 expr_comp: expr_comp TOKEN_LE expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 48 (expr_comp)
+
+
+state 101
+
+   50 expr_comp: expr_comp TOKEN_LT expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 50 (expr_comp)
+
+
+state 102
+
+   53 expr_comp: expr_comp TOKEN_NE expr_arith .
+   55 expr_arith: expr_arith . TOKEN_ADD expr_geom
+   56           | expr_arith . TOKEN_SUB expr_geom
+
+    TOKEN_ADD  shift, and go to state 61
+    TOKEN_SUB  shift, and go to state 62
+
+    $default  reduce using rule 53 (expr_comp)
+
+
+state 103
+
+   55 expr_arith: expr_arith TOKEN_ADD expr_geom .
+   58 expr_geom: expr_geom . TOKEN_MULT expr_exp
+   59          | expr_geom . TOKEN_DIV expr_exp
+   60          | expr_geom . TOKEN_MOD expr_exp
+
+    TOKEN_MULT  shift, and go to state 63
+    TOKEN_DIV   shift, and go to state 64
+    TOKEN_MOD   shift, and go to state 65
+
+    $default  reduce using rule 55 (expr_arith)
+
+
+state 104
+
+   56 expr_arith: expr_arith TOKEN_SUB expr_geom .
+   58 expr_geom: expr_geom . TOKEN_MULT expr_exp
+   59          | expr_geom . TOKEN_DIV expr_exp
+   60          | expr_geom . TOKEN_MOD expr_exp
+
+    TOKEN_MULT  shift, and go to state 63
+    TOKEN_DIV   shift, and go to state 64
+    TOKEN_MOD   shift, and go to state 65
+
+    $default  reduce using rule 56 (expr_arith)
+
+
+state 105
+
+   58 expr_geom: expr_geom TOKEN_MULT expr_exp .
+   62 expr_exp: expr_exp . TOKEN_EXP expr_unary
+
+    TOKEN_EXP  shift, and go to state 66
+
+    $default  reduce using rule 58 (expr_geom)
+
+
+state 106
+
+   59 expr_geom: expr_geom TOKEN_DIV expr_exp .
+   62 expr_exp: expr_exp . TOKEN_EXP expr_unary
+
+    TOKEN_EXP  shift, and go to state 66
+
+    $default  reduce using rule 59 (expr_geom)
+
+
+state 107
+
+   60 expr_geom: expr_geom TOKEN_MOD expr_exp .
+   62 expr_exp: expr_exp . TOKEN_EXP expr_unary
+
+    TOKEN_EXP  shift, and go to state 66
+
+    $default  reduce using rule 60 (expr_geom)
+
+
+state 108
+
+   62 expr_exp: expr_exp TOKEN_EXP expr_unary .
+
+    $default  reduce using rule 62 (expr_exp)
+
+
+state 109
+
+   13 type: TOKEN_FUNCTION type TOKEN_LPAREN param_list TOKEN_RPAREN .
+
+    $default  reduce using rule 13 (type)
+
+
+state 110
+
+   18 n_param_list: param TOKEN_COMMA . n_param_list
+
+    TOKEN_IDENT  shift, and go to state 1
+
+    n_param_list  go to state 124
+    param         go to state 71
+    ident         go to state 72
+
+
+state 111
+
+   19 param: ident TOKEN_COLON . type
+
+    TOKEN_STRING    shift, and go to state 9
+    TOKEN_INT       shift, and go to state 10
+    TOKEN_ARRAY     shift, and go to state 11
+    TOKEN_BOOLEAN   shift, and go to state 12
+    TOKEN_CHAR      shift, and go to state 13
+    TOKEN_FUNCTION  shift, and go to state 14
+    TOKEN_VOID      shift, and go to state 15
+
+    type  go to state 125
+
+
+state 112
+
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN . expr TOKEN_RPAREN stmt_matched TOKEN_ELSE stmt_matched
+   33 n_stmt_matched: TOKEN_IF TOKEN_LPAREN . expr TOKEN_RPAREN stmt
+   34               | TOKEN_IF TOKEN_LPAREN . expr TOKEN_RPAREN stmt_matched TOKEN_ELSE n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    expr            go to state 126
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 113
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN . opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN . opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 37 (opt_expr)
+
+    ident           go to state 29
+    opt_expr        go to state 127
+    expr            go to state 31
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 114
+
+   29 stmt_matched: TOKEN_PRINT expr_list . TOKEN_SEMICOLON
+
+    TOKEN_SEMICOLON  shift, and go to state 128
+
+
+state 115
+
+   28 stmt_matched: TOKEN_RETURN opt_expr . TOKEN_SEMICOLON
+
+    TOKEN_SEMICOLON  shift, and go to state 129
+
+
+state 116
+
+   26 stmt_matched: expr . TOKEN_SEMICOLON
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN      shift, and go to state 52
+    TOKEN_SEMICOLON  shift, and go to state 120
+
+
+state 117
+
+   32 stmt_block: TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE .
+
+    $default  reduce using rule 32 (stmt_block)
+
+
+state 118
+
+   21 stmt_list: stmt stmt_list .
+
+    $default  reduce using rule 21 (stmt_list)
+
+
+state 119
+
+    7 decl: ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE . TOKEN_SEMICOLON
+
+    TOKEN_SEMICOLON  shift, and go to state 130
+
+
+state 120
+
+   26 stmt_matched: expr TOKEN_SEMICOLON .
+
+    $default  reduce using rule 26 (stmt_matched)
+
+
+state 121
+
+   40 n_expr_list: expr TOKEN_COMMA . n_expr_list
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    ident           go to state 29
+    n_expr_list     go to state 131
+    expr            go to state 91
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 122
+
+   72 expr_grouping: ident TOKEN_LPAREN expr_list TOKEN_RPAREN .
+
+    $default  reduce using rule 72 (expr_grouping)
+
+
+state 123
+
+   71 expr_grouping: ident TOKEN_LBRACE expr TOKEN_RBRACE .
+
+    $default  reduce using rule 71 (expr_grouping)
+
+
+state 124
+
+   18 n_param_list: param TOKEN_COMMA n_param_list .
+
+    $default  reduce using rule 18 (n_param_list)
+
+
+state 125
+
+   19 param: ident TOKEN_COLON type .
+
+    $default  reduce using rule 19 (param)
+
+
+state 126
+
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN expr . TOKEN_RPAREN stmt_matched TOKEN_ELSE stmt_matched
+   33 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr . TOKEN_RPAREN stmt
+   34               | TOKEN_IF TOKEN_LPAREN expr . TOKEN_RPAREN stmt_matched TOKEN_ELSE n_stmt_matched
+   42 expr: expr . TOKEN_ASSGN expr_not_assgn
+
+    TOKEN_ASSGN   shift, and go to state 52
+    TOKEN_RPAREN  shift, and go to state 132
+
+
+state 127
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr . TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr . TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_SEMICOLON  shift, and go to state 133
+
+
+state 128
+
+   29 stmt_matched: TOKEN_PRINT expr_list TOKEN_SEMICOLON .
+
+    $default  reduce using rule 29 (stmt_matched)
+
+
+state 129
+
+   28 stmt_matched: TOKEN_RETURN opt_expr TOKEN_SEMICOLON .
+
+    $default  reduce using rule 28 (stmt_matched)
+
+
+state 130
+
+    7 decl: ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON .
+
+    $default  reduce using rule 7 (decl)
+
+
+state 131
+
+   40 n_expr_list: expr TOKEN_COMMA n_expr_list .
+
+    $default  reduce using rule 40 (n_expr_list)
+
+
+state 132
+
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN . stmt_matched TOKEN_ELSE stmt_matched
+   33 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN . stmt
+   34               | TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN . stmt_matched TOKEN_ELSE n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt            go to state 134
+    stmt_matched    go to state 135
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 84
+    expr            go to state 116
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 133
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON . opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON . opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 37 (opt_expr)
+
+    ident           go to state 29
+    opt_expr        go to state 136
+    expr            go to state 31
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 134
+
+   33 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt .
+
+    $default  reduce using rule 33 (n_stmt_matched)
+
+
+state 135
+
+   23 stmt: stmt_matched .
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched . TOKEN_ELSE stmt_matched
+   34 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched . TOKEN_ELSE n_stmt_matched
+
+    TOKEN_ELSE  shift, and go to state 137
+
+    $default  reduce using rule 23 (stmt)
+
+
+state 136
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr . TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr . TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_SEMICOLON  shift, and go to state 138
+
+
+state 137
+
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE . stmt_matched
+   34 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE . n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt_matched    go to state 139
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 140
+    expr            go to state 116
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 138
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON . opt_expr TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON . opt_expr TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_NOT             shift, and go to state 28
+
+    $default  reduce using rule 37 (opt_expr)
+
+    ident           go to state 29
+    opt_expr        go to state 141
+    expr            go to state 31
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 139
+
+   30 stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE stmt_matched .
+
+    $default  reduce using rule 30 (stmt_matched)
+
+
+state 140
+
+   34 n_stmt_matched: TOKEN_IF TOKEN_LPAREN expr TOKEN_RPAREN stmt_matched TOKEN_ELSE n_stmt_matched .
+
+    $default  reduce using rule 34 (n_stmt_matched)
+
+
+state 141
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr . TOKEN_RPAREN stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr . TOKEN_RPAREN n_stmt_matched
+
+    TOKEN_RPAREN  shift, and go to state 142
+
+
+state 142
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN . stmt_matched
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN . n_stmt_matched
+
+    TOKEN_IDENT           shift, and go to state 1
+    TOKEN_STRING_LITERAL  shift, and go to state 21
+    TOKEN_INT_LITERAL     shift, and go to state 22
+    TOKEN_IF              shift, and go to state 73
+    TOKEN_CHAR_LITERAL    shift, and go to state 23
+    TOKEN_FALSE           shift, and go to state 24
+    TOKEN_FOR             shift, and go to state 74
+    TOKEN_PRINT           shift, and go to state 75
+    TOKEN_RETURN          shift, and go to state 76
+    TOKEN_TRUE            shift, and go to state 25
+    TOKEN_NEGATION        shift, and go to state 26
+    TOKEN_LPAREN          shift, and go to state 27
+    TOKEN_LCURLBRACE      shift, and go to state 77
+    TOKEN_NOT             shift, and go to state 28
+
+    decl            go to state 78
+    ident           go to state 79
+    stmt_matched    go to state 143
+    stmt_block      go to state 83
+    n_stmt_matched  go to state 144
+    expr            go to state 116
+    expr_not_assgn  go to state 32
+    expr_and        go to state 33
+    expr_comp       go to state 34
+    expr_arith      go to state 35
+    expr_geom       go to state 36
+    expr_exp        go to state 37
+    expr_unary      go to state 38
+    expr_incr       go to state 39
+    expr_grouping   go to state 40
+    expr_primary    go to state 41
+
+
+state 143
+
+   27 stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN stmt_matched .
+
+    $default  reduce using rule 27 (stmt_matched)
+
+
+state 144
+
+   35 n_stmt_matched: TOKEN_FOR TOKEN_LPAREN opt_expr TOKEN_SEMICOLON opt_expr TOKEN_SEMICOLON opt_expr TOKEN_RPAREN n_stmt_matched .
+
+    $default  reduce using rule 35 (n_stmt_matched)

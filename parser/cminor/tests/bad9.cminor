@@ -1,0 +1,7 @@
+//incorrect for form
+
+hey : function integer () = {
+	for(i: integer = 5; i<3; i++){
+	
+	}
+}

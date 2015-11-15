@@ -1,0 +1,12 @@
+//these multi line comments though. Also the ?
+
+/*I DON'T
+MESS
+WITH /*
+YOU
+*/
+OR DO I?
+
+int main(){
+	printf("your compiler is kill")
+}

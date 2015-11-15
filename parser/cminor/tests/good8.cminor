@@ -1,0 +1,10 @@
+//crazy expressions
+
+main: function integer (c: integer, p: string, a: array [] boolean) = {
+	i: array [0] integer = {5,2,3};
+	if(1){
+		print "hi";
+	}else if(1){
+		h = ((1+2)/3 + (4^4)*(3/3) % a);
+	}
+}

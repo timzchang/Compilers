@@ -1,0 +1,5 @@
+//missing equals
+
+main: function integer (argc: integer, argv: array [] string) {
+	print "my life is in shambles";
+}

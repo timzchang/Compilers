@@ -1,0 +1,5 @@
+//single if, no statement
+
+main: function integer (argc: integer, argv: array [] string) = {
+	if(1)
+}
