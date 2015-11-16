@@ -105,13 +105,13 @@ int parse(char *file, struct decl *parser_result){
 int main(int argc, char * argv[]){
 	extern FILE * yyin;
 	extern char * yytext;
+	extern struct decl *parser_result;
 	if(argc > 2 && strcmp(argv[1],"-scan")==0){
 		// yyin = fopen(argv[2], "r");
 		scan(argv[2]);
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
-		extern struct decl *parser_result;
 		parse(argv[2], parser_result);
-	}else if(argc >2 && strcmp(argv[1], "-resolve"){
+	}else if(argc >2 && strcmp(argv[1], "-resolve")){
 		resolve(argv[2], parser_result);
 	}else{
 		printf("cannot open\n");

@@ -3,6 +3,10 @@
 #define SYMBOL_H
 
 #include "type.h"
+#include "stmt.h"
+#include "expr.h"
+#include "decl.h"
+#include "param_list.h"
 #include <stdlib.h>
 typedef enum {
 	SYMBOL_LOCAL,
