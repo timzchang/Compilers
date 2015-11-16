@@ -9,9 +9,15 @@
 #include "expr.h"
 #include "stmt.h"
 #include "param_list.h"
+#include "hash_table.h"
+#include "scope.h"
 
 extern int yyparse();
 extern int yylex();
+
+// the global hash_table.
+extern struct hash_table *h;
+extern int error_count;
 
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.
@@ -105,6 +111,8 @@ int main(int argc, char * argv[]){
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
 		extern struct decl *parser_result;
 		parse(argv[2], parser_result);
+	}else if(argc >2 && strcmp(argv[1], "-resolve"){
+		resolve(argv[2], parser_result);
 	}else{
 		printf("cannot open\n");
 		exit(1);

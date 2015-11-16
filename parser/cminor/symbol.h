@@ -19,4 +19,9 @@ struct symbol {
 
 struct symbol * symbol_create( symbol_t kind, struct type *type, char *name );
 
+void expr_resolve(struct expr *e);
+void stmt_resolve(struct stmt *s);
+void decl_resolve(struct decl *d);
+void param_list_resolve(struct param_list *p);
+
 #endif

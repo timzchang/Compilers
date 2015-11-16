@@ -1,8 +1,8 @@
 all: cminor
 target = cminor
 
-cminor: main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o
-	gcc main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o -o $(target)
+cminor: main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o
+	gcc main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o -o $(target)
 
 %.o: %.c *.h parser.tab.h
 	gcc -c $< -o $@
