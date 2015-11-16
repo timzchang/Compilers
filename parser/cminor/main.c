@@ -13,6 +13,9 @@
 extern int yyparse();
 extern int yylex();
 
+/*	Precondition: an unedited char ptr
+	Postcondition: string is modified to get rid of null char and white space.
+*/
 void edit_string(char * word){
 	int i, j, k;
 	for(i=1;i<strlen(word);i++){
@@ -72,10 +75,10 @@ int scan(char *file){
 	return 0;
 }
 
-int parse(char *file){
+int parse(char *file, struct decl *parser_result){
 	extern FILE * yyin;
 	extern char * yytext;
-	extern struct decl *parser_result;
+	//extern struct decl *parser_result;
 	// extern int yyparse();
 	int t;
 	yyin = fopen(file, "r");
@@ -100,7 +103,8 @@ int main(int argc, char * argv[]){
 		// yyin = fopen(argv[2], "r");
 		scan(argv[2]);
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
-		parse(argv[2]);
+		extern struct decl *parser_result;
+		parse(argv[2], parser_result);
 	}else{
 		printf("cannot open\n");
 		exit(1);
