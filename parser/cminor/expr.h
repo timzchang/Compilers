@@ -2,7 +2,7 @@
 #define EXPR_H
 
 #include "symbol.h"
-
+#include "scope.h"
 extern int error_count;
 typedef enum {
 	EXPR_ADD,

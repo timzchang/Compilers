@@ -1,7 +1,7 @@
 #include "scope.h"
 #include "hash_table.h"
 
-extern h;
+//extern h;
 
 // when we see {, create a new hash_table and connect
 void scope_enter(){

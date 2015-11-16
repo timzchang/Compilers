@@ -2,6 +2,7 @@
 #define SCOPE_H 
 
 #include "symbol.h"
+
 extern struct hash_table *h;
 
 void scope_enter();  // when we see {, create a new hash_table and connect

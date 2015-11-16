@@ -112,7 +112,7 @@ int main(int argc, char * argv[]){
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
 		parse(argv[2], parser_result);
 	}else if(argc >2 && strcmp(argv[1], "-resolve")){
-		resolve(argv[2], parser_result);
+	//	resolve(argv[2], parser_result);
 	}else{
 		printf("cannot open\n");
 		exit(1);

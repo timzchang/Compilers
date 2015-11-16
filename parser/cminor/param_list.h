@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern error_count;
+
 struct expr;
 
 struct param_list {

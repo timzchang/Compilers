@@ -1,5 +1,5 @@
 #include "expr.h"
-
+#include "symbol.h"
 
 struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right ){
 	struct expr *e = malloc(sizeof(*e));
@@ -184,9 +184,9 @@ void expr_resolve(struct expr *e){
 	if(!e) return;
 	expr_resolve(e->left);
 	expr_resolve(e->right);
-	struct symbol *s;
+	struct symbol *s = scope_lookup(e->name);
 	if(e->kind == EXPR_NAME){
-		s = scope_lookup(e->name);
+		//s = scope_lookup(e->name);
 		if(s){
 			e->symbol = s;
 			if(e->symbol->kind = SYMBOL_LOCAL){
