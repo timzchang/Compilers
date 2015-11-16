@@ -16,8 +16,8 @@ extern int yyparse();
 extern int yylex();
 
 // the global hash_table.
-extern struct hash_table *h;
-extern int error_count;
+struct hash_table *h;
+int error_count;
 
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.

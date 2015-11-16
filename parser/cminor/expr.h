@@ -3,6 +3,7 @@
 
 #include "symbol.h"
 
+extern int error_count;
 typedef enum {
 	EXPR_ADD,
 	EXPR_SUB,
