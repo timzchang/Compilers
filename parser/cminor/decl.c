@@ -48,3 +48,9 @@ void decl_print( struct decl *d, int indent ){
 	// printf("\n");
 	decl_print(d->next, indent);
 }
+
+void decl_resolve(struct decl *d){
+	if(!d) return;
+	struct symbol *sym = symbol_create(SYMBOL_GLOBAL, d->type, d->name);
+
+}

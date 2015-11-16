@@ -179,3 +179,26 @@ void expr_print( struct expr *e ){
 		// printf(")");
 	// printf(")");
 }
+
+void expr_resolve(struct expr *e){
+	if(!e) return;
+	expr_resolve(e->left);
+	expr_resolve(e->right);
+	struct symbol *s;
+	if(e->kind == EXPR_NAME){
+		s = scope_lookup(e->name);
+		if(s){
+			e->symbol = s;
+			if(e->symbol->kind = SYMBOL_LOCAL){
+				printf("%s resolves to local %d\n", e->name, e->symbol->which);
+			}else if(e->symbol->kind = SYMBOL_PARAM){
+				printf("%s resolves to param %d\n", e->name, e->symbol->which);
+			}else{
+				printf("%s resolves to global %s\n", e->name, e->symbol->name);
+			}
+		}else{
+			printf("resolve error: %s is not defined", e->name);
+			error_count++;
+		}
+	}
+}
