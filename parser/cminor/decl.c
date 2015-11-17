@@ -55,9 +55,11 @@ void decl_resolve(struct decl *d){
 	// so hear we need to do something to add something to the symbol table
 
 	struct symbol *sym;
-	sym = hash_table_lookup(h, d->name);
+	sym = scope_lookup(d->name);
 	if(sym){
 		printf("resolve error: %s already defined in this scope\n", d->name);
+		error_count++;
+		return;
 	}else{
 		symbol_t kind;
 		if(scope_level() == 1){
@@ -66,13 +68,19 @@ void decl_resolve(struct decl *d){
 		}else{
 			kind = SYMBOL_LOCAL;
 			sym = symbol_create(kind, d->type, d->name);
-			sym->which = hash_table_size(h);
+			sym->which = hash_table_size(h)-2;
+		}
+		scope_bind(d->name, sym);
+		d->symbol = sym;
+		expr_resolve(d->value);
+		if(d->code){
+			scope_enter();
+			param_list_resolve(d->type->params);
+			stmt_resolve(d->code);
+			scope_leave();
 		}
 		
 	}
-	
-	expr_resolve(d->value);
-	stmt_resolve(d->code);
 	decl_resolve(d->next);
 
 }

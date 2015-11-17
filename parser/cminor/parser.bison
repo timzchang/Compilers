@@ -98,8 +98,8 @@ decl 		:	ident TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON
 				{$$ = decl_create($1, $3, $5, 0, 0);}
 			|	ident TOKEN_COLON type TOKEN_SEMICOLON
 				{$$ = decl_create($1, $3, 0, 0, 0);}
-			|	ident TOKEN_COLON type TOKEN_ASSGN stmt_block//TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE   // function() = {stmt_list}  
-				{$$ = decl_create($1, $3, 0, $5, 0); /*printf("function\n");*/}
+			|	ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE   // function() = {stmt_list}  
+				{$$ = decl_create($1, $3, 0, $6, 0); /*printf("function\n");*/}
 			|	ident TOKEN_COLON type TOKEN_ASSGN /*stmt_block*/TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON // array[] int = expr_primary
 				{$$ = decl_create($1, $3, $6, 0, 0);}
 	;
