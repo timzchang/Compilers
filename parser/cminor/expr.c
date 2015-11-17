@@ -190,11 +190,11 @@ void expr_resolve(struct expr *e){
 		if(s){
 			e->symbol = s;
 			if(e->symbol->kind == SYMBOL_LOCAL){
-				printf("resolution error: %s resolves to local %d\n", e->name, e->symbol->which);
+				printf("resolve error: %s resolves to local %d\n", e->name, e->symbol->which);
 			}else if(e->symbol->kind == SYMBOL_PARAM){
-				printf("resolution error: %s resolves to param %d\n", e->name, e->symbol->which);
+				printf("resolve error: %s resolves to param %d\n", e->name, e->symbol->which);
 			}else{
-				printf("resolution error: %s resolves to global %s\n", e->name, e->symbol->name);
+				printf("resolve error: %s resolves to global %s\n", e->name, e->symbol->name);
 			}
 		}else{
 			printf("resolve error: %s is not defined", e->name);

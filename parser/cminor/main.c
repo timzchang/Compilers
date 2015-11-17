@@ -86,7 +86,6 @@ int parse(char *file, struct decl *parser_result){
 	extern char * yytext;
 	//extern struct decl *parser_result;
 	// extern int yyparse();
-	int t;
 	yyin = fopen(file, "r");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
@@ -94,6 +93,24 @@ int parse(char *file, struct decl *parser_result){
 	}else if(yyparse()==0){
 		printf("parsed!\n");
 		decl_print(parser_result, 0);
+		printf("\n");
+		return 0;
+	}else{
+		fprintf(stderr, "error, can't be parsed\n");
+		return 1;
+	}
+}
+
+int resolve(char *file, struct decl *parser_result){
+	extern FILE * yyin;
+	extern char * yytext;
+	yyin = fopen(file, "r");
+	if(!yyin){
+		fprintf(stderr, "error, can't read file\n");
+		return 1;
+	}else if(yyparse()==0){
+		printf("parsed!\n");
+		decl_resolve(parser_result);
 		printf("\n");
 		return 0;
 	}else{
@@ -112,7 +129,7 @@ int main(int argc, char * argv[]){
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
 		parse(argv[2], parser_result);
 	}else if(argc >2 && strcmp(argv[1], "-resolve")){
-	//	resolve(argv[2], parser_result);
+		resolve(argv[2], parser_result);
 	}else{
 		printf("cannot open\n");
 		exit(1);

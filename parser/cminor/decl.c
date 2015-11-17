@@ -57,7 +57,7 @@ void decl_resolve(struct decl *d){
 	struct symbol *sym;
 	sym = hash_table_lookup(h, d->name);
 	if(sym){
-		printf("resolution error: %s already defined in this scope\n", d->name);
+		printf("resolve error: %s already defined in this scope\n", d->name);
 	}else{
 		symbol_t kind;
 		if(scope_level() == 1){
@@ -76,3 +76,11 @@ void decl_resolve(struct decl *d){
 	decl_resolve(d->next);
 
 }
+/*
+void decl_typecheck(struct decl *d){
+	struct type *t = expr_typecheck(d->value)
+	if(!type_compare(d->type, t)){
+		error_print(d->type, t);  // this will print the relevant typechecking error
+	}
+	if(d->symbol->kind == SYMBOL_GLOBAL && )
+}*/

@@ -23,6 +23,7 @@ void param_list_print( struct param_list *p ){
 // have to store params in a place where they can be resolved in block.
 void param_list_resolve(struct param_list *p){
 	if(!p) return;
-	
+	// so with param lists, you want them to be entered into the next scope, but technically you haven't gotten there yet
+	// because you enter scope when you hit a block.
 	param_list_resolve(p->next);
 }
