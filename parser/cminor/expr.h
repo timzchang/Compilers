@@ -3,7 +3,7 @@
 
 #include "symbol.h"
 #include "scope.h"
-extern int error_count;
+#include "global.h"
 typedef enum {
 	EXPR_ADD,
 	EXPR_SUB,

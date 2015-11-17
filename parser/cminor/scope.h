@@ -2,6 +2,8 @@
 #define SCOPE_H 
 
 #include "symbol.h"
+#include "hash_table.h"
+#include "global.h"
 
 extern struct hash_table *h;
 

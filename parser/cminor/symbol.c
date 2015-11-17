@@ -1,7 +1,7 @@
 #include "symbol.h"
 #include "scope.h"
 
-extern error_count;
+// extern error_count;
 
 struct symbol * symbol_create( symbol_t kind, struct type *type, char *name ){
 	kind = kind;

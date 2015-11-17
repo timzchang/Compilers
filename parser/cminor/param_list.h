@@ -4,8 +4,7 @@
 #include "type.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-extern error_count;
+#include "global.h"
 
 struct expr;
 

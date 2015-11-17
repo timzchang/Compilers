@@ -1,5 +1,5 @@
 #include "scope.h"
-#include "hash_table.h"
+
 
 //extern h;
 
@@ -28,7 +28,7 @@ int scope_level(){
 		h_cursor = hash_table_lookup(h_cursor, "0prev");
 		count++;
 	}
-
+	return count;
 }
 
 // insert into the current scope an entry binding a name to a symbol object

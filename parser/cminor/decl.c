@@ -51,6 +51,28 @@ void decl_print( struct decl *d, int indent ){
 
 void decl_resolve(struct decl *d){
 	if(!d) return;
-	struct symbol *sym = symbol_create(SYMBOL_GLOBAL, d->type, d->name);
+
+	// so hear we need to do something to add something to the symbol table
+
+	struct symbol *sym;
+	sym = hash_table_lookup(h, d->name);
+	if(sym){
+		printf("resolution error: %s already defined in this scope\n", d->name);
+	}else{
+		symbol_t kind;
+		if(scope_level() == 1){
+			kind = SYMBOL_GLOBAL;
+			sym = symbol_create(kind, d->type, d->name);
+		}else{
+			kind = SYMBOL_LOCAL;
+			sym = symbol_create(kind, d->type, d->name);
+			sym->which = hash_table_size(h);
+		}
+		
+	}
+	
+	expr_resolve(d->value);
+	stmt_resolve(d->code);
+	decl_resolve(d->next);
 
 }

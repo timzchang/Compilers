@@ -23,21 +23,6 @@ void param_list_print( struct param_list *p ){
 // have to store params in a place where they can be resolved in block.
 void param_list_resolve(struct param_list *p){
 	if(!p) return;
-	/*if(e->kind == EXPR_NAME){
-		s = scope_lookup(e->name);
-		if(s){
-			e->symbol = s;
-			if(e->symbol->kind = SYMBOL_LOCAL){
-				printf("%s resolves to local %d\n", e->name, e->symbol->which);
-			}else if(e->symbol->kind = SYMBOL_PARAM){
-				printf("%s resolves to param %d\n", e->name, e->symbol->which);
-			}else{
-				printf("%s resolves to global %s\n", e->name, e->symbol->name);
-			}
-		}else{
-			printf("resolve error: %s is not defined", e->name);
-			error_count++;
-		}
-	}*/
+	
 	param_list_resolve(p->next);
 }
