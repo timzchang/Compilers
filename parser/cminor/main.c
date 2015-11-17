@@ -81,9 +81,10 @@ int scan(char *file){
 	return 0;
 }
 
-int parse(char *file, struct decl *parser_result){
+int parse(char *file) {
 	extern FILE * yyin;
 	extern char * yytext;
+	extern struct decl *parser_result;
 	//extern struct decl *parser_result;
 	// extern int yyparse();
 	yyin = fopen(file, "r");
@@ -101,9 +102,11 @@ int parse(char *file, struct decl *parser_result){
 	}
 }
 
-int resolve(char *file, struct decl *parser_result){
+int resolve(char *file){
 	extern FILE * yyin;
 	extern char * yytext;
+	extern struct decl *parser_result;
+	h = hash_table_create(0,0);
 	yyin = fopen(file, "r");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
@@ -127,9 +130,9 @@ int main(int argc, char * argv[]){
 		// yyin = fopen(argv[2], "r");
 		scan(argv[2]);
 	}else if(argc >2 && strcmp(argv[1], "-parse")==0){
-		parse(argv[2], parser_result);
-	}else if(argc >2 && strcmp(argv[1], "-resolve")){
-		resolve(argv[2], parser_result);
+		parse(argv[2]);
+	}else if(argc >2 && strcmp(argv[1], "-resolve")==0){
+		resolve(argv[2]);
 	}else{
 		printf("cannot open\n");
 		exit(1);

@@ -2,10 +2,10 @@ all: cminor
 target = cminor
 
 cminor: main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o
-	gcc main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o -o $(target)
+	gcc -g -O0 -gdwarf-2  main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o -o $(target)
 
 %.o: %.c *.h parser.tab.h
-	gcc -c $< -o $@
+	gcc -c -g -O0 -gdwarf-2 $< -o $@
 
 scanner.c: scanner.l parser.tab.h
 	flex -o scanner.c scanner.l

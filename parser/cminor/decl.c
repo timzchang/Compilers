@@ -66,7 +66,7 @@ void decl_resolve(struct decl *d){
 		}else{
 			kind = SYMBOL_LOCAL;
 			sym = symbol_create(kind, d->type, d->name);
-			sym->which = hash_table_size(h);
+			//sym->which = hash_table_size(h);
 		}
 		
 	}
