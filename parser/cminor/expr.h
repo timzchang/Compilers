@@ -4,6 +4,7 @@
 #include "symbol.h"
 #include "scope.h"
 #include "global.h"
+// #include "type.h"
 typedef enum {
 	EXPR_ADD,
 	EXPR_SUB,
@@ -58,5 +59,6 @@ struct expr * expr_create_string_literal( const char *str );
 
 void expr_print( struct expr *e );
 void expr_resolve(struct expr *e);
+struct type * expr_typecheck(struct expr * e);
 
 #endif

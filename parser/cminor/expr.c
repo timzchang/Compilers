@@ -1,5 +1,5 @@
 #include "expr.h"
-#include "symbol.h"
+#include "type.h"
 
 struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right ){
 	struct expr *e = malloc(sizeof(*e));
@@ -184,21 +184,449 @@ void expr_resolve(struct expr *e){
 	if(!e) return;
 	expr_resolve(e->left);
 	expr_resolve(e->right);
-	struct symbol *s = scope_lookup(e->name);
 	if(e->kind == EXPR_NAME){
 		//s = scope_lookup(e->name);
+		struct symbol *s = scope_lookup(e->name);
 		if(s){
 			e->symbol = s;
 			if(e->symbol->kind == SYMBOL_LOCAL){
-				printf("resolve error: %s resolves to local %d\n", e->name, e->symbol->which);
+				printf("%s resolves to local %d\n", e->name, e->symbol->which);
 			}else if(e->symbol->kind == SYMBOL_PARAM){
-				printf("resolve error: %s resolves to param %d\n", e->name, e->symbol->which);
+				printf("%s resolves to param %d\n", e->name, e->symbol->which);
 			}else{
-				printf("resolve error: %s resolves to global %s\n", e->name, e->symbol->name);
+				printf("%s resolves to global %s\n", e->name, e->symbol->name);
 			}
 		}else{
-			printf("resolve error: %s is not defined", e->name);
+			printf("resolve error: %s is not defined\n", e->name);
 			error_count++;
 		}
 	}
+}
+
+//TODO: EXPR_FUNC
+struct type * expr_typecheck(struct expr * e){
+	if(!e) return type_create(TYPE_VOID, 0, 0, 0);
+	struct type * L = expr_typecheck(e->left);
+	struct type * R = expr_typecheck(e->right);
+	switch(e->kind){
+		case EXPR_ADD:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot add ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" to ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
+			break;
+		case EXPR_SUB:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot subtract ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" from ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
+			break;
+		case EXPR_MULT:
+			
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot multiply ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" if ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
+			break;
+		case EXPR_DIV:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot divide ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" with ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
+			break;
+		case EXPR_NAME:
+			return e->symbol->type;
+			break;
+		case EXPR_STRING:
+			return type_create(TYPE_STRING, 0, 0, 0);
+			break;
+		case EXPR_INT:
+			return type_create(TYPE_INTEGER, 0, 0, 0);
+			break;
+		case EXPR_BOOLEAN:
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_CHAR:
+			return type_create(TYPE_CHARACTER, 0, 0, 0);
+			break;
+		case EXPR_ASSGN:
+			if(e->left->symbol->type->kind == TYPE_FUNCTION){
+				printf("type error: cannot assign ");
+				type_print(e->left->symbol->type);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" to ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+				return type_create(e->left->symbol->type->kind, 0, 0, 0);
+			}
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != R->kind){
+				printf("type error: cannot divide ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" with ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(e->left->symbol->type->kind, 0, 0, 0);
+			break;
+		case EXPR_GT:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_LT:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_GE:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_LE:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_EQ:
+			// check if the types being compared as are functions or arrays
+			if(e->left->kind == EXPR_BRACKET || e->left->kind == EXPR_FUNC || e->right->kind == EXPR_BRACKET || e->right->kind == EXPR_FUNC){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(e->left->symbol->type);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(e->right->symbol->type);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+				return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			}
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != R->kind){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_NE:
+			if(e->left->kind == EXPR_BRACKET || e->left->kind == EXPR_FUNC || e->right->kind == EXPR_BRACKET || e->right->kind == EXPR_FUNC){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(e->left->symbol->type);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(e->right->symbol->type);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+				return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			}
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != R->kind){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_NOT:
+			// // struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(R->kind != TYPE_BOOLEAN){
+				printf("type error: cannot perform negation on");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_NEG:
+			// struct type * R = expr_typecheck(e->right);
+			if(R->kind != TYPE_INTEGER){
+				printf("type error: cannot perform negation on");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);
+			break;
+		case EXPR_EXP:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot use exponent on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);
+			break;
+		case EXPR_INCR:
+			// struct type * L = expr_typecheck(e->left);
+			if(L->kind != TYPE_INTEGER){
+				printf("type error: cannot increment ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);
+			break;
+		case EXPR_DECR:
+			// struct type * L = expr_typecheck(e->left);
+			if(L->kind != TYPE_INTEGER){
+				printf("type error: cannot decrement ");
+				type_print(L);
+				printf("\n");
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);
+			break;
+		case EXPR_BRACKET:
+			// struct type * R = expr_typecheck(e->right);
+			if(R->kind != TYPE_INTEGER){
+				printf("type error: cannot use ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf(" to index array");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(e->left->symbol->type->subtype->kind, 0, 0, 0);
+			break;
+		case EXPR_FUNC:
+			break;
+		case EXPR_LIST:
+			break;
+		case EXPR_OR:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_BOOLEAN || R->kind != TYPE_BOOLEAN){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_AND:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_BOOLEAN || R->kind != TYPE_BOOLEAN){
+				printf("type error: cannot perform boolean logic on ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" and ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_BOOLEAN, 0, 0, 0);
+			break;
+		case EXPR_MOD:
+			// struct type * L = expr_typecheck(e->left);
+			// struct type * R = expr_typecheck(e->right);
+			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
+				printf("type error: cannot divide ");
+				type_print(L);
+				printf(" (");
+				expr_print(e->left);
+				printf(")");
+				printf(" with ");
+				type_print(R);
+				printf(" (");
+				expr_print(e->right);
+				printf(")");
+				printf("\n");
+				error_count++;
+			}
+			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
+			break;
+		default:
+			return type_create(TYPE_VOID, 0, 0, 0);
+	}
+	return type_create(TYPE_VOID, 0, 0, 0);
 }

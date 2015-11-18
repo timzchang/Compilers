@@ -251,13 +251,16 @@ expr_incr 	:	expr_grouping TOKEN_INCREMENT
 	;
 expr_grouping :	TOKEN_LPAREN expr TOKEN_RPAREN
 				{$$ = $2;}
-			|	ident TOKEN_LBRACE expr TOKEN_RBRACE  // primary?
+			|	ident TOKEN_LBRACE expr TOKEN_RBRACE expr_array  // primary?
 				{$$ = expr_create(EXPR_BRACKET, expr_create_name($1), $3);}
 			|	ident TOKEN_LPAREN expr_list TOKEN_RPAREN 
 				{$$ = expr_create(EXPR_FUNC, expr_create_name($1), $3);}
 			|	expr_primary
 				{$$ = $1;}
 	;
+expr_array  :	TOKEN_LBRACE expr TOKEN_RBRACE expr_array
+			|	/* nothing */
+			;
 expr_primary:	TOKEN_INT_LITERAL
 				{int temp = atoi(yytext); $$ = expr_create_integer_literal(temp);/*printf("%d\n", $$->literal_value);*/}
 			|	ident

@@ -55,21 +55,23 @@ void decl_resolve(struct decl *d){
 	// so hear we need to do something to add something to the symbol table
 
 	struct symbol *sym;
-	sym = scope_lookup(d->name);
+	sym = scope_lookup_single(d->name);
 	if(sym){
 		printf("resolve error: %s already defined in this scope\n", d->name);
 		error_count++;
-		return;
 	}else{
 		symbol_t kind;
 		if(scope_level() == 1){
 			kind = SYMBOL_GLOBAL;
 			sym = symbol_create(kind, d->type, d->name);
+			printf("%s resolves to global %s\n", d->name, sym->name);
 		}else{
 			kind = SYMBOL_LOCAL;
 			sym = symbol_create(kind, d->type, d->name);
-			sym->which = hash_table_size(h)-2;
+			sym->which = 1;
+			printf("%s resolves to local %d\n", d->name, sym->which);
 		}
+
 		scope_bind(d->name, sym);
 		d->symbol = sym;
 		expr_resolve(d->value);
@@ -82,13 +84,22 @@ void decl_resolve(struct decl *d){
 		
 	}
 	decl_resolve(d->next);
-
 }
-/*
+
+
 void decl_typecheck(struct decl *d){
-	struct type *t = expr_typecheck(d->value)
-	if(!type_compare(d->type, t)){
-		error_print(d->type, t);  // this will print the relevant typechecking error
+	if(!d) return;
+	struct type *t = expr_typecheck(d->value);
+	if(type_compare(d->type, t) != 0){
+		// error_print(d->type, t);  // this will print the relevant typechecking error
 	}
-	if(d->symbol->kind == SYMBOL_GLOBAL && )
-}*/
+	if(d->value){
+		if(d->symbol->kind == SYMBOL_GLOBAL && d->value->kind != EXPR_BOOLEAN && d->value->kind != EXPR_INT && d->value->kind != EXPR_STRING && d->value->kind != EXPR_CHAR){
+			// print error
+		}
+	}
+	if(d->code){
+		stmt_typecheck(d->code);
+	}
+	decl_typecheck(d->next);
+}

@@ -36,6 +36,18 @@ void scope_bind(const char * name, struct symbol *sym){
 	hash_table_insert(h, name, sym);
 }  
 
-struct symbol * scope_lookup(const char * name){
+struct symbol * scope_lookup_single(const char * name){
 	return hash_table_lookup(h, name);
+}
+
+//traverse up the thing
+struct symbol * scope_lookup(const char * name){
+	struct hash_table *h_cursor = h;
+	while(h_cursor){
+		if(hash_table_lookup(h_cursor,name)){
+			return hash_table_lookup(h_cursor,name);
+		}
+		h_cursor = hash_table_lookup(h_cursor, "0prev");
+	}
+	return NULL;
 }

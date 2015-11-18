@@ -23,7 +23,15 @@ void param_list_print( struct param_list *p ){
 // have to store params in a place where they can be resolved in block.
 void param_list_resolve(struct param_list *p){
 	if(!p) return;
-	// so with param lists, you want them to be entered into the next scope, but technically you haven't gotten there yet
-	// because you enter scope when you hit a block.
+	
+	if(scope_lookup_single(p->name)){
+		printf("resolve error: %s already defined in this scope\n", p->name);
+		error_count++;
+	}else{
+		struct symbol *sym = symbol_create(SYMBOL_PARAM, p->type, p->name);
+		scope_bind(p->name, sym);
+		printf("%s resolves to param %d", p->name, sym->which);
+		p->symbol = sym;
+	}
 	param_list_resolve(p->next);
 }

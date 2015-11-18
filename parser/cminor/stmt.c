@@ -129,4 +129,34 @@ void stmt_resolve(struct stmt *s){
 			scope_leave();
 			break;
 	}
+	stmt_resolve(s->next);
+}
+
+void stmt_typecheck(struct stmt *s){
+	if(!s) return;
+
+	switch(s->kind){
+		case STMT_DECL:
+
+		break;
+		case STMT_EXPR:
+
+		break;
+		case STMT_IF_ELSE:
+
+		break;
+		case STMT_FOR:
+
+		break;
+		case STMT_PRINT:
+
+		break;
+		case STMT_RETURN:
+
+		break;
+		case STMT_BLOCK:
+
+		break;
+	}
+	stmt_typecheck(s->next);
 }

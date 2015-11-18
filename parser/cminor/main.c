@@ -90,7 +90,7 @@ int parse(char *file) {
 	yyin = fopen(file, "r");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
-		return 1;
+		exit(1);
 	}else if(yyparse()==0){
 		printf("parsed!\n");
 		decl_print(parser_result, 0);
@@ -98,7 +98,7 @@ int parse(char *file) {
 		return 0;
 	}else{
 		fprintf(stderr, "error, can't be parsed\n");
-		return 1;
+		exit(1);
 	}
 }
 
@@ -110,15 +110,38 @@ int resolve(char *file){
 	yyin = fopen(file, "r");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
-		return 1;
+		exit(1);
 	}else if(yyparse()==0){
 		printf("parsed!\n");
 		decl_resolve(parser_result);
-		printf("\n");
+		printf("Error count: %d\n", error_count);
 		return 0;
 	}else{
 		fprintf(stderr, "error, can't be parsed\n");
-		return 1;
+		exit(1);
+	}
+}
+
+int typecheck(char *file){
+	extern FILE * yyin;
+	extern char * yytext;
+	extern struct decl *parser_result;
+	if(!yyin){
+		fprintf(stderr, "error, can't read file\n");
+		exit(1);
+	}else if(yyparse()==0){
+		//printf("parsed!\n");
+		decl_resolve(parser_result);
+		printf("Resolve error count: %d\n", error_count);
+		if(error_count >0){
+			exit(1);
+		}
+		decl_typecheck(parser_result);
+		printf("Typecheck error count: %d\n", error_count);
+		return 0;
+	}else{
+		fprintf(stderr, "error, can't be parsed\n");
+		exit(1);
 	}
 }
 
