@@ -1,0 +1,7 @@
+// nested function declarations
+
+f: function void() = {
+	d: function integer() ={
+		return 1;
+	}
+}

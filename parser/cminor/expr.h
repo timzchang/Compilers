@@ -32,7 +32,8 @@ typedef enum {
 	EXPR_LIST,
 	EXPR_OR,
 	EXPR_AND,
-	EXPR_MOD
+	EXPR_MOD,
+	EXPR_BLOCK
 	/* many more types to add here */
 } expr_t;
 
@@ -60,5 +61,8 @@ struct expr * expr_create_string_literal( const char *str );
 void expr_print( struct expr *e );
 void expr_resolve(struct expr *e);
 struct type * expr_typecheck(struct expr * e);
+struct expr * expr_copy(struct expr *e);
+int expr_compare(struct expr *a, struct expr *b);
+int expr_is_constant(struct expr *a);
 
 #endif

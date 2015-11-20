@@ -1,0 +1,5 @@
+// redifining param
+
+main: function void(s:string, a:integer) = {
+	a: string = "hello";
+}

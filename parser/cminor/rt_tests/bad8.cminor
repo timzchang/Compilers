@@ -1,0 +1,5 @@
+// declaration of global is not constant
+
+i: integer = 3;
+
+b: integer = i+3;

@@ -1,5 +1,6 @@
 #include "decl.h"
 
+
 struct decl * decl_create( char *name, struct type *t, struct expr *v, struct stmt *c, struct decl *next ){
 	struct decl *d = malloc(sizeof(*d));
 	d->name = name;
@@ -25,6 +26,7 @@ void decl_print( struct decl *d, int indent ){
 	// printf("\n");
 	printf("%*s",indent,"");
 	printf("%s: ", d->name);
+	// printf("%d", d->type->kind);
 	type_print(d->type);
 	if(d->value){
 		printf(" = ");
@@ -36,14 +38,14 @@ void decl_print( struct decl *d, int indent ){
 			expr_print(d->value);
 		}
 		printf(";");
-	}else if(d->code && d->code->kind == STMT_BLOCK){
+	}else if(d->code){
 		printf(" = ");
 		printf("{");  // STMT_PRINT PRINTS \N FIRST ALWAYS
 		stmt_print(d->code, indent+4);
 		printf("\n%*s",indent,"");
-		printf("}");
+		printf("}\n");
 	}else{
-		printf(";");
+		printf(";\n");
 	}
 	// printf("\n");
 	decl_print(d->next, indent);
@@ -57,21 +59,48 @@ void decl_resolve(struct decl *d){
 	struct symbol *sym;
 	sym = scope_lookup_single(d->name);
 	if(sym){
-		printf("resolve error: %s already defined in this scope\n", d->name);
-		error_count++;
+		if(sym->type->kind != TYPE_FUNCTION || sym->code == 1){
+			printf("resolve error: %s already defined in this scope\n", d->name);
+			error_count++;
+		}else{
+			if(d->code){
+				if(!type_compare(d->type, sym->type)){
+					printf("resolve error: %s is redefined with subtype ", d->name);
+					type_print(d->type);
+					printf(" expecting ");
+					type_print(sym->type);
+					printf("\n");
+					error_count++;
+				}else{
+					d->symbol = sym;
+					printf("%s resolves to global %s\n", d->name, sym->name);
+					sym->code = 1;
+					scope_enter();
+					param_list_resolve(d->type->params);
+					stmt_resolve(d->code);
+					scope_leave();
+				}
+			}else{
+				printf("resolve error: %s already defined in this scope\n", d->name);
+				error_count++;
+			}
+		}
 	}else{
 		symbol_t kind;
 		if(scope_level() == 1){
 			kind = SYMBOL_GLOBAL;
 			sym = symbol_create(kind, d->type, d->name);
+			scope_bind(d->name, sym);
 			printf("%s resolves to global %s\n", d->name, sym->name);
 		}else{
-			kind = SYMBOL_LOCAL;
-			sym = symbol_create(kind, d->type, d->name);
-			sym->which = 1;
+			int *which = hash_table_lookup(h, "0locals");  // which grabs the number of locals from the hash table
+			sym = symbol_create(SYMBOL_LOCAL, d->type, d->name);
+			sym->which = *which;
+			*which += 1;
+			scope_bind(d->name, sym);
+			d->symbol = sym;
 			printf("%s resolves to local %d\n", d->name, sym->which);
 		}
-
 		scope_bind(d->name, sym);
 		d->symbol = sym;
 		expr_resolve(d->value);
@@ -80,6 +109,7 @@ void decl_resolve(struct decl *d){
 			param_list_resolve(d->type->params);
 			stmt_resolve(d->code);
 			scope_leave();
+			sym->code = 1;
 		}
 		
 	}
@@ -90,16 +120,31 @@ void decl_resolve(struct decl *d){
 void decl_typecheck(struct decl *d){
 	if(!d) return;
 	struct type *t = expr_typecheck(d->value);
-	if(type_compare(d->type, t) != 0){
+	if(d->type->kind != TYPE_FUNCTION && d->value && !type_compare(d->type, t)){  // check assignment
 		// error_print(d->type, t);  // this will print the relevant typechecking error
+		printf("type error: cannot assign ");
+		type_print(d->type);
+		printf(" (");
+		printf("%s",d->name);
+		printf(")");
+		printf(" to ");
+		type_print(t);
+		printf(" ");
+		expr_print(d->value);
+		printf("\n");
+		error_count++;
 	}
-	if(d->value){
-		if(d->symbol->kind == SYMBOL_GLOBAL && d->value->kind != EXPR_BOOLEAN && d->value->kind != EXPR_INT && d->value->kind != EXPR_STRING && d->value->kind != EXPR_CHAR){
+	if(d->value){  // check
+		if(d->symbol->kind == SYMBOL_GLOBAL && !expr_is_constant(d->value)){
 			// print error
+			printf("type error: global ");
+			printf("%s", d->name);
+			printf(" cannot be assigned to non-constant\n");
+			error_count++;
 		}
 	}
 	if(d->code){
-		stmt_typecheck(d->code);
+		stmt_typecheck(d->code, d);
 	}
 	decl_typecheck(d->next);
 }

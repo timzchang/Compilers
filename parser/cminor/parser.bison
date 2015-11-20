@@ -9,7 +9,7 @@
 %start program
 %type <decl> program decl_list decl
 %type <stmt> stmt stmt_list stmt_matched n_stmt_matched stmt_block
-%type <expr> expr expr_list n_expr_list opt_expr expr_and expr_comp expr_arith expr_geom expr_exp expr_unary expr_incr expr_grouping expr_primary expr_not_assgn
+%type <expr> expr expr_list n_expr_list opt_expr expr_and expr_comp expr_arith expr_geom expr_exp expr_unary expr_incr expr_grouping expr_primary expr_not_assgn n_expr_list_block expr_block
 %type <type> type
 %type <name> ident
 %type <param_list> param_list n_param_list param 
@@ -97,10 +97,10 @@ decl_list	:	decl decl_list
 decl 		:	ident TOKEN_COLON type TOKEN_ASSGN expr TOKEN_SEMICOLON
 				{$$ = decl_create($1, $3, $5, 0, 0);}
 			|	ident TOKEN_COLON type TOKEN_SEMICOLON
-				{$$ = decl_create($1, $3, 0, 0, 0);}
-			|	ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE   // function() = {stmt_list}  
-				{$$ = decl_create($1, $3, 0, $6, 0); /*printf("function\n");*/}
-			|	ident TOKEN_COLON type TOKEN_ASSGN /*stmt_block*/TOKEN_LCURLBRACE n_expr_list TOKEN_RCURLBRACE TOKEN_SEMICOLON // array[] int = expr_primary
+				{/*printf("creating decl\n");*/ $$ = decl_create($1, $3, 0, 0, 0);}
+			|	ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE stmt_list TOKEN_RCURLBRACE  
+				{$$ = decl_create($1, $3, 0, $6, 0); if(!$6) {$$->code = stmt_create(STMT_EMPTY, 0, 0, 0, 0, 0, 0);} /*printf("function\n");*/}
+			|	ident TOKEN_COLON type TOKEN_ASSGN TOKEN_LCURLBRACE n_expr_list_block TOKEN_RCURLBRACE TOKEN_SEMICOLON // array[] int = expr_primary
 				{$$ = decl_create($1, $3, $6, 0, 0);}
 	;
 type		:	TOKEN_STRING
@@ -183,6 +183,16 @@ n_expr_list	:	expr TOKEN_COMMA n_expr_list
 				{$$ = expr_create(EXPR_LIST, $1, $3);}
 			|	expr
 				{$$ = $1;}
+	;
+expr_block	:	TOKEN_LCURLBRACE n_expr_list_block TOKEN_RCURLBRACE
+				{$$ = expr_create(EXPR_BLOCK, $2, 0);}
+	;
+n_expr_list_block : expr_block TOKEN_COMMA n_expr_list_block 
+					{$$ = expr_create(EXPR_BLOCK, $1, $3);}
+			|	expr_block
+				{$$ = $1;}
+			|	n_expr_list
+				{$$ = expr_create(EXPR_BLOCK, $1, 0);}
 	;
 expr		:	expr TOKEN_ASSGN expr_not_assgn
 				{$$ = expr_create(EXPR_ASSGN, $1, $3);}

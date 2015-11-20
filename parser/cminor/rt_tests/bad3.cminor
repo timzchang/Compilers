@@ -1,0 +1,7 @@
+//bad if statment
+
+main: function void(s:string, a:integer, s:integer) = {
+	if(1){
+		return;
+	}
+}

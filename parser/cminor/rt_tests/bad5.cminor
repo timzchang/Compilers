@@ -1,0 +1,7 @@
+// incorrect for loop
+
+main: function integer(i: integer) = {
+	for(i=1;i--;i++){
+		print i;
+	}
+}

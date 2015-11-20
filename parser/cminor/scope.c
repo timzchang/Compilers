@@ -5,11 +5,17 @@
 
 // when we see {, create a new hash_table and connect
 void scope_enter(){
+	int * params = malloc(sizeof(int));
+	int * locals = malloc(sizeof(int));
+	*params = 0;
+	*locals = 0;
 	struct hash_table *h_prev;  // keep track of prev
 	h_prev = h;  // NOT SURE: should we dereference h? we want h_prev to be what h is pointing to currently.
 	hash_table_insert(h, "0next", hash_table_create(0,0));  // next pointer
 	h = hash_table_lookup(h, "0next");  // shift
 	hash_table_insert(h,"0prev", h_prev);  // now new table has a reverse pointer
+	hash_table_insert(h,"0params", params);  // insert params and locals counter
+	hash_table_insert(h,"0locals", locals);
 }
 
 // when we see }, go back one hash table and delete

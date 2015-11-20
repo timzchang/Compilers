@@ -1,5 +1,6 @@
 #include "expr.h"
 #include "type.h"
+#include <string.h>
 
 struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right ){
 	struct expr *e = malloc(sizeof(*e));
@@ -208,6 +209,12 @@ struct type * expr_typecheck(struct expr * e){
 	if(!e) return type_create(TYPE_VOID, 0, 0, 0);
 	struct type * L = expr_typecheck(e->left);
 	struct type * R = expr_typecheck(e->right);
+	struct symbol * sym;
+	struct expr * e_cursor;
+	struct param_list * p_cursor;
+	int param_count = 0;
+	int arg_count = 0;
+	int counter = 0;
 	switch(e->kind){
 		case EXPR_ADD:
 			// struct type * L = expr_typecheck(e->left);
@@ -313,11 +320,11 @@ struct type * expr_typecheck(struct expr * e){
 				printf(")");
 				printf("\n");
 				error_count++;
-				return type_create(e->left->symbol->type->kind, 0, 0, 0);
+				return type_create(e->right->symbol->type->kind, 0, 0, 0);
 			}
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
-			if(L->kind != R->kind){
+			if(type_compare(L, R) == 0){
 				printf("type error: cannot divide ");
 				type_print(L);
 				printf(" (");
@@ -562,9 +569,87 @@ struct type * expr_typecheck(struct expr * e){
 				printf("\n");
 				error_count++;
 			}
-			return type_create(e->left->symbol->type->subtype->kind, 0, 0, 0);
+			return type_create(e->left->symbol->type->kind, 0, e->left->symbol->type->subtype, e->left->symbol->type->opt_expr);
 			break;
 		case EXPR_FUNC:
+			sym = scope_lookup(e->left->name);
+			e_cursor = e->right;
+			p_cursor = sym->type->params;
+			while(e_cursor){
+				if(e_cursor->kind == EXPR_LIST){  // if the one we're on is exprlist
+					if(e_cursor->right->kind != EXPR_LIST){  // and we're at thge end of our list
+						arg_count += 2;  // add 2 
+						break;
+					}else{  // else add 1 and continue
+						arg_count++;
+						e_cursor = e_cursor->right;
+					}
+				}else{  // the one we're on is not exprlist, so add and leave
+					arg_count++;
+					break;
+				}
+			}
+			while(p_cursor){
+				param_count++;
+				p_cursor = p_cursor->next;
+			}
+			if(param_count != arg_count){
+				printf("type error: function (%s) needs %d arguments, got %d\n", e->left->name, param_count, arg_count);
+				error_count++;
+				return type_create(sym->type->subtype->kind, 0, 0, 0);
+			}
+			e_cursor = e->right;
+			p_cursor = sym->type->params;
+			if(arg_count == 1){
+				if(!type_compare(expr_typecheck(e_cursor), p_cursor->type)){
+					printf("type error: argument for function (%s) is of type ", e->left->name);
+					type_print(expr_typecheck(e->right));
+					printf(" but needs type ");
+					type_print(p_cursor->type);
+					printf("\n");
+					error_count++;
+				}
+			}else{
+				counter = 0;
+				while(e_cursor){
+					counter++;
+					// there are more than one arguments, not at last 2
+					if(e_cursor->right->kind == EXPR_LIST){
+						if(!type_compare(expr_typecheck(e_cursor->left), p_cursor->type)){
+							printf("type error: argument %d of function (%s) is of type ", counter, e->left->name);
+							type_print(expr_typecheck(e_cursor->left));
+							printf(" but needs type ");
+							type_print(p_cursor->type);
+							printf("\n");
+							error_count++;
+						}
+					}else{  // at last 2 arguments. the left and right of EXPR_LIST are values
+						if(!type_compare(expr_typecheck(e_cursor->left), p_cursor->type)){
+							printf("type error: argument %d of function (%s) is of type ", counter, e->left->name);
+							type_print(expr_typecheck(e_cursor->left));
+							printf(" but needs type ");
+							type_print(p_cursor->type);
+							printf("\n");
+							error_count++;
+						}
+						p_cursor = p_cursor->next;
+						if(!type_compare(expr_typecheck(e_cursor->right), p_cursor->type)){
+							printf("type error: argument %d of function (%s) is of type ", counter, e->left->name);
+							type_print(expr_typecheck(e_cursor->left));
+							printf(" but needs type ");
+							type_print(p_cursor->type);
+							printf("\n");
+							error_count++;
+						}
+						e_cursor = 0;
+					}
+					if(e_cursor){
+						e_cursor = e_cursor->right;
+					}
+					p_cursor = p_cursor->next;
+				}
+			}
+			return type_create(sym->type->subtype->kind, 0, 0, 0);
 			break;
 		case EXPR_LIST:
 			break;
@@ -625,8 +710,90 @@ struct type * expr_typecheck(struct expr * e){
 			}
 			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
 			break;
+		case EXPR_BLOCK:
+			e_cursor = e->left;
+			while(e_cursor){
+				if(e_cursor->kind == EXPR_LIST){
+					if(e_cursor->right->kind != EXPR_LIST){
+						counter += 2;
+						break;
+					}else{
+						counter++;
+						e_cursor = e_cursor->right;
+					}
+				}else{
+					counter++;
+					break;
+				}
+			}
+			return type_create(TYPE_ARRAY, 0, expr_typecheck(e->left->left), expr_create_integer_literal(counter));
+			break;
 		default:
 			return type_create(TYPE_VOID, 0, 0, 0);
 	}
 	return type_create(TYPE_VOID, 0, 0, 0);
+}
+
+// function needed by type_copy()
+struct expr * expr_copy(struct expr *e){
+	if(!e) return NULL;
+	struct expr * temp = malloc(sizeof(*e));
+	char * name;
+	char * string_literal;
+	switch(e->kind){
+		case EXPR_NAME:
+			name = strdup(e->name);
+			temp = expr_create_name(name);
+			temp->symbol = scope_lookup(name);
+			return temp;
+			break;
+		case EXPR_STRING:
+			string_literal = strdup(e->string_literal);
+			return expr_create_string_literal(string_literal);
+			break;
+		case EXPR_INT:
+			return expr_create_integer_literal(e->literal_value);
+			break;
+		case EXPR_BOOLEAN:
+			return expr_create_boolean_literal(e->literal_value);
+			break;
+		case EXPR_CHAR:
+			return expr_create_character_literal(e->literal_value);
+			break;
+		default:
+			return expr_create(e->kind, expr_copy(e->left), expr_copy(e->right));
+	}
+}
+
+// compare two expr trees
+int expr_compare(struct expr *a, struct expr *b){
+	if(!a && !b) return 1;
+	if(!a || !b) return 0;
+	if(a->name && b->name){
+		return (a->kind == b->kind && expr_compare(a->left, b->left) && 
+		expr_compare(a->right, b->right) && strcmp(a->name, b->name) == 0 &&
+		symbol_compare(a->symbol, b->symbol) && a->literal_value == b->literal_value);
+	}else if(!a->name && !b->name){
+		if(a->string_literal && b->string_literal){
+			return (a->kind == b->kind && expr_compare(a->left, b->left) && 
+				expr_compare(a->right, b->right) && symbol_compare(a->symbol, b->symbol) && 
+				a->literal_value == b->literal_value && strcmp(a->string_literal, b->string_literal) == 0);
+		}else if(!a->string_literal && !b->string_literal){
+			return (a->kind == b->kind && expr_compare(a->left, b->left) && 
+				expr_compare(a->right, b->right) && symbol_compare(a->symbol, b->symbol) && 
+				a->literal_value == b->literal_value);
+		}else{
+			return 0;
+		}
+	}else{
+		return 0;
+	}
+}
+
+int expr_is_constant(struct expr *a){
+	if(!a) return 1;
+	if(a->name){
+		return 0;
+	}
+	return (expr_is_constant(a->left) && expr_is_constant(a->right));
 }

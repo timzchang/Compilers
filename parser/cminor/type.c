@@ -42,3 +42,23 @@ void type_print( struct type *t ){
 		break;
 	}
 }
+
+// recursively copy all the way down.
+struct type * type_copy(struct type *t){
+	if(!t) return NULL;
+	struct type * temp = type_create(t->kind, param_list_copy(t->params), type_copy(t->subtype), expr_copy(t->opt_expr));
+	return temp;
+}
+
+// compare two types
+int type_compare( struct type *a, struct type *b ){
+	if(!a && !b) return 1;
+	if(!a || !b) return 0;
+	return (a->kind == b->kind && param_list_compare(a->params, b->params) && 
+		type_compare(a->subtype, b->subtype) && expr_compare(a->opt_expr, b->opt_expr));
+}
+
+// 
+void type_delete( struct type *t ){
+
+}

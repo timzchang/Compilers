@@ -1,0 +1,8 @@
+// printing statement
+
+main: function integer(i: integer) = {
+	s: string = "hello";
+
+	print s, i;
+
+}

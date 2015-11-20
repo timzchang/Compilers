@@ -1,0 +1,13 @@
+// nested return types
+
+f1: function integer(s: string) = {
+	return 1;
+}
+
+f2: function integer() = {
+	return 2;
+}
+
+main: function integer() = {
+	return f1("h") + f2();
+}

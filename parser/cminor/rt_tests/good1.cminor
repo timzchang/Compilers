@@ -1,0 +1,9 @@
+x: integer = 1;
+
+main: function void(s:integer) = {
+	a: string = "hello";
+}
+
+f: function void() = {
+	return main(x-1);
+}

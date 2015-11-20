@@ -1,0 +1,7 @@
+//for loop with 1 expression
+
+main: function integer(i: integer) = {
+	for(;i<1;){
+	
+	}
+}

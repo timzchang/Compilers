@@ -126,6 +126,8 @@ int typecheck(char *file){
 	extern FILE * yyin;
 	extern char * yytext;
 	extern struct decl *parser_result;
+	h = hash_table_create(0,0);
+	yyin = fopen(file, "r");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
 		exit(1);
@@ -156,6 +158,8 @@ int main(int argc, char * argv[]){
 		parse(argv[2]);
 	}else if(argc >2 && strcmp(argv[1], "-resolve")==0){
 		resolve(argv[2]);
+	}else if(argc >2 && strcmp(argv[1], "-typecheck")==0){
+		typecheck(argv[2]);
 	}else{
 		printf("cannot open\n");
 		exit(1);

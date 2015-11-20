@@ -1,0 +1,9 @@
+//incorrect param/args
+
+f: function integer(a: integer, b: integer) = {
+	return 1;
+}
+
+main: function integer() = {
+	return f(1);
+}

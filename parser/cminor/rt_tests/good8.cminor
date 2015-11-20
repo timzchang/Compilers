@@ -1,0 +1,9 @@
+// param/args correctness
+
+f: function void(a: string, b: string, c: string) = {
+	return;
+}
+
+main: function void() = {
+	return f("my", "life", "is in shambles");
+}

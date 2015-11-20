@@ -1,0 +1,5 @@
+// overloading functions
+
+f: function integer(a: string, b: char);
+
+f: function void(a: integer, b: char);

@@ -1,0 +1,5 @@
+// param resolve error
+
+main: function void(s:string, a:integer, s:integer) = {
+	a: string = "hello";
+}

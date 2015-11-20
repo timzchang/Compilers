@@ -1,0 +1,7 @@
+// redefining functions with different return types
+
+f: function integer(s:string);
+
+f: function void(s: string) = {
+	
+}

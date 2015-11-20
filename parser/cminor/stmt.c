@@ -91,6 +91,8 @@ void stmt_print( struct stmt *s, int indent ){
 		// printf("\n%*s",indent,"");
 		// printf("}");
 		break;
+	case STMT_EMPTY:
+		break;
 	}
 	// printf("\n");
 	stmt_print(s->next, indent);
@@ -128,35 +130,67 @@ void stmt_resolve(struct stmt *s){
 			stmt_resolve(s->body);
 			scope_leave();
 			break;
+		case STMT_EMPTY:
+			break;
 	}
 	stmt_resolve(s->next);
 }
 
-void stmt_typecheck(struct stmt *s){
+void stmt_typecheck(struct stmt *s, struct decl *d){
 	if(!s) return;
-
+	struct type *t;
 	switch(s->kind){
 		case STMT_DECL:
-
-		break;
+			if(s->decl->type->kind == TYPE_FUNCTION){
+				printf("type error: cannot declare function (%s) within another function (%s)\n", s->decl->name, d->name);
+				error_count++;
+			}else{
+				decl_typecheck(s->decl);
+			}
+			break;
 		case STMT_EXPR:
-
+			expr_typecheck(s->expr);
 		break;
 		case STMT_IF_ELSE:
-
+			t = expr_typecheck(s->expr);
+			if(t->kind != TYPE_BOOLEAN){
+				printf("type error: If statement condition (");
+				expr_print(s->expr);
+				printf(") is not type boolean\n");
+				error_count++;
+			}
+			stmt_typecheck(s->body, d);
+			stmt_typecheck(s->else_body, d);
 		break;
 		case STMT_FOR:
-
+			t = expr_typecheck(s->expr);
+			if(t->kind != TYPE_BOOLEAN || t->kind != TYPE_VOID){
+				printf("type error: expression in for loop (");
+				expr_print(s->expr);
+				printf(") must be either of type boolean or void\n");
+				error_count++;
+			}
+			stmt_typecheck(s->body, d);
 		break;
 		case STMT_PRINT:
-
+			expr_typecheck(s->expr);
 		break;
 		case STMT_RETURN:
-
+			t = expr_typecheck(s->expr);
+			if(t->kind != d->type->subtype->kind){
+				printf("type error: expected return type of (%s) is ", d->name);
+				type_print(d->type->subtype);
+				printf(", got ");
+				type_print(t);
+				printf(" instead\n");
+				error_count++;
+			}
 		break;
 		case STMT_BLOCK:
-
+			stmt_typecheck(s->body, d);
+		break;
+		case STMT_EMPTY:
 		break;
 	}
-	stmt_typecheck(s->next);
+	stmt_typecheck(s->next, d);
 }

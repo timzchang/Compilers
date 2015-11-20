@@ -1,0 +1,5 @@
+// print expr list of statments
+
+main: function string(i: string) = {
+	print i, "hello", "hi";
+}

@@ -1,0 +1,7 @@
+//function prototypes
+
+f: function integer(h: string);
+
+f: function integer(h:string) = {
+	print h;
+}
