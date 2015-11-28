@@ -21,6 +21,7 @@ struct entry {
 	struct entry *next;
 };
 
+/*
 struct hash_table {
 	hash_func_t hash_func;
 	int bucket_count;
@@ -28,7 +29,10 @@ struct hash_table {
 	struct entry **buckets;
 	int ibucket;
 	struct entry *ientry;
+	struct hash_table *next;
+	struct hash_table *prev;
 };
+*/
 
 struct hash_table *hash_table_create(int bucket_count, hash_func_t func)
 {

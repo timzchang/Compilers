@@ -3,6 +3,7 @@
 
 #include "symbol.h"
 #include "hash_table.h"
+// #include "hash_table.c"
 #include "global.h"
 
 extern struct hash_table *h;

@@ -10,10 +10,14 @@ void scope_enter(){
 	*params = 0;
 	*locals = 0;
 	struct hash_table *h_prev;  // keep track of prev
-	h_prev = h;  // NOT SURE: should we dereference h? we want h_prev to be what h is pointing to currently.
-	hash_table_insert(h, "0next", hash_table_create(0,0));  // next pointer
-	h = hash_table_lookup(h, "0next");  // shift
-	hash_table_insert(h,"0prev", h_prev);  // now new table has a reverse pointer
+	h->next = hash_table_create(0,0);  // create new hash table
+	h_prev = h;  
+	h = h->next;
+	h->prev = h_prev;
+	// hash_table_insert(h, "0next", hash_table_create(0,0));  // next pointer
+
+	// h = hash_table_lookup(h, "0next");  // shift
+	// hash_table_insert(h,"0prev", h_prev);  // now new table has a reverse pointer
 	hash_table_insert(h,"0params", params);  // insert params and locals counter
 	hash_table_insert(h,"0locals", locals);
 }
@@ -21,9 +25,13 @@ void scope_enter(){
 // when we see }, go back one hash table and delete
 void scope_leave(){
 	// include check for null?
-	h = hash_table_lookup(h, "0prev");  // move h back
-	hash_table_clear(hash_table_lookup(h,"0next"));  // clear
-	hash_table_delete(hash_table_lookup(h,"0next"));  // delete table
+	// h = hash_table_lookup(h, "0prev");  // move h back
+	h = h->prev;  // move h back
+	hash_table_clear(h->next);
+	hash_table_delete(h->next);
+	h->next = NULL;
+	// hash_table_clear(hash_table_lookup(h,"0next"));  // clear
+	// hash_table_delete(hash_table_lookup(h,"0next"));  // delete table
 } 
 
 // lookup current level?

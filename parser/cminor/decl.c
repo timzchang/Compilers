@@ -58,20 +58,20 @@ void decl_resolve(struct decl *d){
 
 	struct symbol *sym;
 	sym = scope_lookup_single(d->name);
-	if(sym){
-		if(sym->type->kind != TYPE_FUNCTION || sym->code == 1){
+	if(sym){  // var is already in scope
+		if(sym->type->kind != TYPE_FUNCTION || sym->code == 1){  // either a var or a fully declared func
 			printf("resolve error: %s already defined in this scope\n", d->name);
 			error_count++;
 		}else{
-			if(d->code){
-				if(!type_compare(d->type, sym->type)){
+			if(d->code){  // if func decl has code
+				if(!type_compare(d->type, sym->type)){  // if return type different
 					printf("resolve error: %s is redefined with subtype ", d->name);
 					type_print(d->type);
 					printf(" expecting ");
 					type_print(sym->type);
 					printf("\n");
 					error_count++;
-				}else{
+				}else{  // defining a prototype
 					d->symbol = sym;
 					printf("%s resolves to global %s\n", d->name, sym->name);
 					sym->code = 1;
