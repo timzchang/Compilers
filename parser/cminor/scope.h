@@ -5,7 +5,7 @@
 #include "hash_table.h"
 // #include "hash_table.c"
 #include "global.h"
-
+       
 extern struct hash_table *h;
 
 void scope_enter();  // when we see {, create a new hash_table and connect
