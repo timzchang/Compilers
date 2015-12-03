@@ -39,7 +39,8 @@ int scope_level(){
 	int count=0;
 	struct hash_table *h_cursor = h;
 	while(h_cursor != NULL){
-		h_cursor = hash_table_lookup(h_cursor, "0prev");
+		// h_cursor = hash_table_lookup(h_cursor, "0prev");
+		h_cursor = h_cursor->prev;
 		count++;
 	}
 	return count;

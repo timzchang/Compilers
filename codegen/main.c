@@ -139,6 +139,9 @@ int typecheck(char *file){
 			exit(1);
 		}
 		decl_typecheck(parser_result);
+		if(error_count>0){
+			exit(1);
+		}
 		printf("Typecheck error count: %d\n", error_count);
 		return 0;
 	}else{
@@ -189,9 +192,9 @@ int main(int argc, char * argv[]){
 		resolve(argv[2]);
 	}else if(argc >2 && strcmp(argv[1], "-typecheck")==0){
 		typecheck(argv[2]);
-	}else if(argc >2 strcmp(argv[1], "-codegen")==0){
+	}else if(argc >2 && strcmp(argv[1], "-codegen")==0){
 		if(argc == 4){
-			codegen(argv[2]);
+			codegen(argv[2], argv[3]);
 		}else{
 			printf("must provide output file\n");
 		}

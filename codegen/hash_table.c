@@ -56,6 +56,9 @@ struct hash_table *hash_table_create(int bucket_count, hash_func_t func)
 		return 0;
 	}
 
+	h->next = NULL;
+	h->prev = NULL;
+
 	return h;
 }
 
