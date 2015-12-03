@@ -1,0 +1,5 @@
+main resolves to global main
+i resolves to param 0
+i resolves to param 0
+Resolve error count: 0
+Typecheck error count: 0

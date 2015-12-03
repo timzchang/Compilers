@@ -1,0 +1,5 @@
+f resolves to global f
+d resolves to global d
+Resolve error count: 0
+type error: cannot declare function (d) within another function (f)
+Typecheck error count: 1

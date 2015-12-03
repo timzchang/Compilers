@@ -1,0 +1,8 @@
+f resolves to global f
+a resolves to param 0
+b resolves to param 1
+main resolves to global main
+f resolves to global f
+Resolve error count: 0
+type error: function (f) needs 2 arguments, got 1
+Typecheck error count: 1

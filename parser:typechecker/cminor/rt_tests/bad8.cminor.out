@@ -1,0 +1,6 @@
+i resolves to global i
+b resolves to global b
+i resolves to global i
+Resolve error count: 0
+type error: global b cannot be assigned to non-constant
+Typecheck error count: 1

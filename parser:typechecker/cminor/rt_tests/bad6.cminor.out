@@ -1,0 +1,3 @@
+f resolves to global f
+resolve error: f already defined in this scope
+Resolve error count: 1

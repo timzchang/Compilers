@@ -1,9 +1,9 @@
 x: integer = 1;
 
-main: function void(s:integer) = {
+main: function integer (s:integer) = {
 	a: string = "hello";
 }
 
 f: function void() = {
-	return main(x-1);
+	x = main(x-1);
 }

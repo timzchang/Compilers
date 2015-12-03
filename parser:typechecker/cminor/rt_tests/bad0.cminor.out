@@ -1,0 +1,3 @@
+f resolves to global f
+resolve error: f is redefined with subtype function void( s:string ) expecting function integer( s:string )
+Resolve error count: 1

@@ -1,0 +1,9 @@
+main resolves to global main
+i resolves to param 0
+i resolves to param 0
+i resolves to param 0
+i resolves to param 0
+i resolves to param 0
+Resolve error count: 0
+type error: expression in for loop ((i--)) must be either of type boolean or void
+Typecheck error count: 1

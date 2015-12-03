@@ -85,7 +85,7 @@ void decl_resolve(struct decl *d){
 				error_count++;
 			}
 		}
-	}else{
+	}else{  // var is not in scope
 		symbol_t kind;
 		if(scope_level() == 1){
 			kind = SYMBOL_GLOBAL;

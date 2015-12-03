@@ -575,7 +575,7 @@ struct type * expr_typecheck(struct expr * e){
 			sym = scope_lookup(e->left->name);
 			e_cursor = e->right;
 			p_cursor = sym->type->params;
-			while(e_cursor){
+			while(e_cursor){  // code to traverse tree and increment arguments
 				if(e_cursor->kind == EXPR_LIST){  // if the one we're on is exprlist
 					if(e_cursor->right->kind != EXPR_LIST){  // and we're at thge end of our list
 						arg_count += 2;  // add 2 

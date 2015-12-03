@@ -1,0 +1,6 @@
+main resolves to global main
+s resolves to param 0
+a resolves to param 1
+resolve error: s already defined in this scope
+resolve error: a already defined in this scope
+Resolve error count: 2

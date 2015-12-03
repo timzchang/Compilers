@@ -61,7 +61,8 @@ struct symbol * scope_lookup(const char * name){
 		if(hash_table_lookup(h_cursor,name)){
 			return hash_table_lookup(h_cursor,name);
 		}
-		h_cursor = hash_table_lookup(h_cursor, "0prev");
+		// h_cursor = hash_table_lookup(h_cursor, "0prev");
+		h_cursor = h_cursor->prev;
 	}
 	return NULL;
 }
