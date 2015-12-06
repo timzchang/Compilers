@@ -418,7 +418,7 @@ struct type * expr_typecheck(struct expr * e){
 			break;
 		case EXPR_EQ:
 			// check if the types being compared as are functions or arrays
-			if(e->left->kind == EXPR_BRACKET || e->left->kind == EXPR_FUNC || e->right->kind == EXPR_BRACKET || e->right->kind == EXPR_FUNC){
+			/*if(e->left->kind == EXPR_BRACKET || e->left->kind == EXPR_FUNC || e->right->kind == EXPR_BRACKET || e->right->kind == EXPR_FUNC){
 				printf("type error: cannot perform boolean logic on ");
 				type_print(e->left->symbol->type);
 				printf(" (");
@@ -432,7 +432,7 @@ struct type * expr_typecheck(struct expr * e){
 				printf("\n");
 				error_count++;
 				return type_create(TYPE_BOOLEAN, 0, 0, 0);
-			}
+			}*/
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
 			if(L->kind != R->kind){
