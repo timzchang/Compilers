@@ -1,4 +1,5 @@
 #include "stmt.h"
+//#include "register.h"
 
 struct stmt * stmt_create( stmt_kind_t kind, struct decl *d, struct expr *init_expr, struct expr *e, struct expr *next_expr, struct stmt *body, struct stmt *else_body ){
 	struct stmt *s = malloc(sizeof(*s));
@@ -163,13 +164,16 @@ void stmt_typecheck(struct stmt *s, struct decl *d){
 			stmt_typecheck(s->else_body, d);
 		break;
 		case STMT_FOR:
+			expr_typecheck(s->init_expr);
 			t = expr_typecheck(s->expr);
-			if(t->kind != TYPE_BOOLEAN || t->kind != TYPE_VOID){
+			printf("%d\n", t->kind);
+			if(t->kind != TYPE_BOOLEAN && t->kind != TYPE_VOID){
 				printf("type error: expression in for loop (");
 				expr_print(s->expr);
 				printf(") must be either of type boolean or void\n");
 				error_count++;
 			}
+			expr_typecheck(s->next_expr);
 			stmt_typecheck(s->body, d);
 		break;
 		case STMT_PRINT:
@@ -193,4 +197,57 @@ void stmt_typecheck(struct stmt *s, struct decl *d){
 		break;
 	}
 	stmt_typecheck(s->next, d);
+}
+
+void stmt_codegen(struct stmt *s, FILE *output){
+	if(!s) return;
+	switch(s->kind){
+	case STMT_DECL:
+		decl_codegen(s->decl, output);
+		break;
+	case STMT_EXPR:
+		expr_codegen(s->expr, output);
+		register_free(s->expr->reg);
+		break;
+	case STMT_IF_ELSE:
+		expr_codegen(s->expr, output);
+		fprintf(output, "\tCMP %s, $0\n", register_name(s->expr->reg));
+		fprintf(output, "\tJE .L%d\n", label_count);
+		stmt_codegen(s->body, output);
+		fprintf(output, "\tJMP .L%d\n", label_count+1);
+		fprintf(output, ".L%d:\n", label_count);
+		stmt_codegen(s->else_body, output);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count);
+		label_count++;
+		break;
+	case STMT_FOR:
+		expr_codegen(s->init_expr, output);
+		fprintf(output, ".L%d:\n", label_count);
+		label_count++;
+		fprintf(output, "\tCMP %s, $0\n", register_name(s->expr->reg));
+		fprintf(output, "\tJE .L%d\n", label_count);
+		stmt_codegen(s->body, output);
+		expr_codegen(s->next_expr, output);
+		fprintf(output, "\tJMP .L%d\n", label_count-1);
+		fprintf(output, ".L%d:\n", label_count);
+		label_count++;
+		break;
+	case STMT_PRINT:
+
+		break;
+	case STMT_RETURN:
+		expr_codegen(s->expr, output);
+		fprintf(output, "\tMOV %s, %%rax\n", register_name(s->expr->reg));
+		// need return statement. Do we just label the postamble always?
+		fprintf(output, "\tjmp .RET\n");
+		register_free(s->expr->reg);
+		break;
+	case STMT_BLOCK:
+		stmt_codegen(s->body, output);
+		break;
+	default:
+		printf("why am I here\n");
+	}
+	stmt_codegen(s->next, output);
 }

@@ -26,5 +26,8 @@ int symbol_compare(struct symbol *a, struct symbol *b){
 		return 0;
 }
 
-
-
+char * symbol_code(struct symbol *s){  // return assembly-friendly representation of var
+	if(s->kind == SYMBOL_GLOBAL){
+		return s->name;
+	}
+}

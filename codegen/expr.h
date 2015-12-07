@@ -4,6 +4,7 @@
 #include "symbol.h"
 #include "scope.h"
 #include "global.h"
+#include <stdio.h>
 // #include "type.h"
 typedef enum {
 	EXPR_ADD,
@@ -42,6 +43,7 @@ struct expr {
 	expr_t kind;
 	struct expr *left;
 	struct expr *right;
+	int reg;
 
 	/* used by leaf expr types */
 	const char *name;
@@ -64,6 +66,7 @@ struct type * expr_typecheck(struct expr * e);
 struct expr * expr_copy(struct expr *e);
 int expr_compare(struct expr *a, struct expr *b);
 int expr_is_constant(struct expr *a);
-void expr_codegen(struct expr *a, char *output);
+void expr_codegen(struct expr *a, FILE *output);
+void get_string(struct expr *e, FILE *output);
 
 #endif

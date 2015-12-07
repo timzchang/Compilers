@@ -21,6 +21,6 @@ struct symbol {
 
 struct symbol * symbol_create( symbol_t kind, struct type *type, char *name );
 int symbol_compare(struct symbol *a, struct symbol *b);
-
+char * symbol_code(struct symbol *s);
 
 #endif

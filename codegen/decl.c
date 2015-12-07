@@ -120,7 +120,7 @@ void decl_typecheck(struct decl *d){
 	if(!d) return;
 	struct type *t = expr_typecheck(d->value);
 	if(d->type->kind != TYPE_FUNCTION && d->value && !type_compare(d->type, t)){  // check assignment
-		// error_print(d->type, t);  // this will print the relevant typechecking error
+		// error_prinat(d->type, t);  // this will print the relevant typechecking error
 		printf("type error: cannot assign ");
 		type_print(d->type);
 		printf(" (");
@@ -148,6 +148,51 @@ void decl_typecheck(struct decl *d){
 	decl_typecheck(d->next);
 }
 
-void decl_codegen(struct decl *d, char * output){
+void decl_codegen(struct decl *d, FILE * output){
+	if(!d) return;
+	if(d->symbol->kind == SYMBOL_GLOBAL){
+		switch(d->type->kind){
+		case TYPE_BOOLEAN:
+		case TYPE_CHARACTER:
+		case TYPE_INTEGER:
+			if(d->value){
+				fprintf(output, ".data\n");
+				fprintf(output, "%s: .quad %d\n", symbol_code(d->symbol), 10);  // need to write evaluation function?
+			}else{
+				fprintf(output, ".data\n");
+				fprintf(output, "%s: .quad 0\n", symbol_code(d->symbol));
+			}
+			break;
+		case TYPE_STRING:
+			if(d->value){
+				fprintf(output, ".data\n");
+				fprintf(output, "%s: .string ", symbol_code(d->symbol));
+				get_string(d->value, output);
+				fprintf(output, "\n");
+			}else{
+				fprintf(output, ".data\n");
+				fprintf(output, "%s: .string \"\"\n", symbol_code(d->symbol));
+			}
+		case TYPE_FUNCTION:
+			if(d->code){
+				fprintf(output, ".text\n.globl %s\n%s:\n", symbol_code(d->symbol), symbol_code(d->symbol));
+				fprintf(output, "\tPUSHQ %%rbp\n\tMOVQ %%rsp, %%rbp\n");
+				fprintf(output, "\tPUSHQ %%rdi\n\tPUSHQ %%rsi\n\tPUSHQ %%rdx\n\tPUSHQ %%rdi\n\tPUSHQ %%rcx\n\tPUSHQ %%r8\n\tPUSHQ %%r9\n");
+				fprintf(output, "\tSUBQ $16, %%rsp\n");
+				fprintf(output, "\tPUSHQ %%rbx\n\tPUSHQ %%r12\n\tPUSHQ %%r13\n\tPUSHQ %%r14\n\tPUSHQ %%r15\n");
+				fprintf(output, "\t#################### body of function starts here\n");
+				stmt_codegen(d->code, output);
+				fprintf(output, "\t#################### epilogue of function restores the stack\n");
+				fprintf(output, "\t.RET:\n");
+				fprintf(output, "\tPOPQ %%r15\n\tPOPQ %%r14\n\tPOPQ %%r13\n\tPOPQ %%r12\n\tPOPQ %%rbx\n");
+				fprintf(output, "\tMOVQ %%rbp, %%rsp\n\tPOPQ %%rbp\n\tret\n");
+			}else{
+				// do nothing
+			}
+		break;
+		}
+	}else if(d->symbol->kind == SYMBOL_LOCAL){
 
+	}
+	decl_codegen(d->next, output);
 }

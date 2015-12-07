@@ -1,0 +1,17 @@
+s: integer;
+a: integer = 10;
+str: string;
+str1: string = "hello";
+
+main: function integer(h: boolean) = {
+	if(h){
+		return 1;
+	}else{
+		return 0;
+	}
+
+	for(a = 1; a<10; a+1){
+		a = a+1;
+	}
+	return 1;
+}

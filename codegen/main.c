@@ -18,6 +18,8 @@ extern int yylex();
 // the global hash_table.
 struct hash_table *h;
 int error_count;
+int reg[16] = {1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0};  // free registers
+int label_count = 0;
 
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.
@@ -156,6 +158,7 @@ int codegen(char *file, char *output_file){
 	extern struct decl *parser_result;
 	h = hash_table_create(0,0);
 	yyin = fopen(file, "r");
+	FILE * output = fopen(output_file, "w");
 	if(!yyin){
 		fprintf(stderr, "error, can't read file\n");
 		exit(1);
@@ -171,7 +174,7 @@ int codegen(char *file, char *output_file){
 		if(error_count>0){
 			exit(1);
 		}
-		decl_codegen(parser_result, output_file);
+		decl_codegen(parser_result, output);
 		return 0;
 	}else{
 		fprintf(stderr, "error, can't be parsed\n");

@@ -11,6 +11,7 @@ struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right ){
 	e->symbol = NULL;
 	e->literal_value = 0;
 	e->string_literal = NULL;
+	e->reg = -1;
 	return e;
 }
 
@@ -23,6 +24,7 @@ struct expr * expr_create_name( const char *n ){
 	e->symbol = NULL;
 	e->literal_value = 0;
 	e->string_literal = NULL;
+	e->reg = -1;
 	return e;
 }
 
@@ -35,6 +37,7 @@ struct expr * expr_create_boolean_literal( int c ){
 	e->symbol = NULL;
 	e->literal_value = c;
 	e->string_literal = NULL;
+	e->reg = -1;
 	return e;
 }
 
@@ -47,6 +50,7 @@ struct expr * expr_create_integer_literal( int c ){
 	e->symbol = NULL;
 	e->literal_value = c;
 	e->string_literal = NULL;
+	e->reg = -1;
 	return e;
 }
 struct expr * expr_create_character_literal( int c ){
@@ -58,6 +62,7 @@ struct expr * expr_create_character_literal( int c ){
 	e->symbol = NULL;
 	e->literal_value = c;
 	e->string_literal = NULL;
+	e->reg = -1;
 	return e;
 }
 
@@ -70,6 +75,7 @@ struct expr * expr_create_string_literal( const char *str ){
 	e->symbol = NULL;
 	e->literal_value = 0;
 	e->string_literal = str;
+	e->reg = -1;
 	return e;
 }
 
@@ -97,6 +103,17 @@ void expr_print( struct expr *e ){
 		printf("%s",e->name);
 		break;
 	case EXPR_STRING:
+		printf("\"");
+		int i;
+		for(i=0; i<strlen(e->string_literal); i++){
+			if(e->string_literal[i]==0){
+				printf("\\0");
+			}else if(e->string_literal[i]==0x0A){
+				printf("\\n");
+			}else{
+				printf("%c",e->string_literal[i]);
+			}
+		}
 		printf("%s",e->string_literal);
 		break;
 	case EXPR_INT:
@@ -109,7 +126,7 @@ void expr_print( struct expr *e ){
 			printf("false");
 		break;
 	case EXPR_CHAR:
-		if(e->literal_value == 0x0aA)
+		if(e->literal_value == 0x0A)
 			printf("%s", "\'\\n\'");
 		else
 			printf("\'%c\'", e->literal_value);
@@ -362,6 +379,7 @@ struct type * expr_typecheck(struct expr * e){
 		case EXPR_LT:
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
+			printf("I'm here\n");
 			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
 				printf("type error: cannot perform boolean logic on ");
 				type_print(L);
@@ -559,6 +577,9 @@ struct type * expr_typecheck(struct expr * e){
 			break;
 		case EXPR_BRACKET:
 			// struct type * R = expr_typecheck(e->right);
+			printf("type error: arrays are not supported\n");
+			exit(1);
+			/*
 			if(R->kind != TYPE_INTEGER){
 				printf("type error: cannot use ");
 				type_print(R);
@@ -568,7 +589,7 @@ struct type * expr_typecheck(struct expr * e){
 				printf(" to index array");
 				printf("\n");
 				error_count++;
-			}
+			}*/
 			return type_create(e->left->symbol->type->kind, 0, e->left->symbol->type->subtype, e->left->symbol->type->opt_expr);
 			break;
 		case EXPR_FUNC:
@@ -798,7 +819,7 @@ int expr_is_constant(struct expr *a){
 	return (expr_is_constant(a->left) && expr_is_constant(a->right));
 }
 
-void expr_codegen(struct expr *e, char *output){
+void expr_codegen(struct expr *e, FILE *output){
 	switch(e->kind){
 	case EXPR_ADD:
 
@@ -884,5 +905,19 @@ void expr_codegen(struct expr *e, char *output){
 	case EXPR_BLOCK:
 
 		break;
+	}
+}
+
+void get_string(struct expr *e, FILE *output){
+	//fprintf(output, "\"");
+	int i;
+	for(i=0; i<strlen(e->string_literal); i++){
+		if(e->string_literal[i]==0){
+			fprintf(output,"\\0");
+		}else if(e->string_literal[i]==0x0A){
+			fprintf(output,"\\n");
+		}else{
+			fprintf(output,"%c",e->string_literal[i]);
+		}
 	}
 }
