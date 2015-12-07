@@ -25,21 +25,21 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-	CMP error, $0
+	CMP $0, %rax
 	JE .L0
-	MOV error, %rax
+	MOV %rax, %rax
 	jmp .RET
 	JMP .L1
 .L0:
-	MOV error, %rax
+	MOV %r10, %rax
 	jmp .RET
 .L1:
 .L2:
-	CMP error, $0
+	CMP $0, %rax
 	JE .L3
 	JMP .L2
-.L3
-	MOV error, %rax
+.L3:
+	MOV %r11, %rax
 	jmp .RET
 	#################### epilogue of function restores the stack
 	.RET:
