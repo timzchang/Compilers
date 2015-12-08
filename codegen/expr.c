@@ -325,20 +325,22 @@ struct type * expr_typecheck(struct expr * e){
 			return type_create(TYPE_CHARACTER, 0, 0, 0);
 			break;
 		case EXPR_ASSGN:
-			if(e->left->symbol->type->kind == TYPE_FUNCTION){
-				printf("type error: cannot assign ");
-				type_print(e->left->symbol->type);
-				printf(" (");
-				expr_print(e->left);
-				printf(")");
-				printf(" to ");
-				type_print(R);
-				printf(" (");
-				expr_print(e->right);
-				printf(")");
-				printf("\n");
-				error_count++;
-				return type_create(e->right->symbol->type->kind, 0, 0, 0);
+			if(e->left->symbol){
+				if(e->left->symbol->type->kind == TYPE_FUNCTION){
+					printf("type error: cannot assign ");
+					type_print(e->left->symbol->type);
+					printf(" (");
+					expr_print(e->left);
+					printf(")");
+					printf(" to ");
+					type_print(R);
+					printf(" (");
+					expr_print(e->right);
+					printf(")");
+					printf("\n");
+					error_count++;
+					return type_create(e->right->symbol->type->kind, 0, 0, 0);
+				}
 			}
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);

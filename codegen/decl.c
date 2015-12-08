@@ -195,7 +195,8 @@ void decl_codegen(struct decl *d, FILE * output){
 				fprintf(output, "\t#################### body of function starts here\n");
 				stmt_codegen(d->code, output);
 				fprintf(output, "\t#################### epilogue of function restores the stack\n");
-				fprintf(output, "\t.RET:\n");
+				fprintf(output, "\t.RET%d:\n", ret_count);
+				ret_count++;
 				fprintf(output, "\tPOPQ %%r15\n\tPOPQ %%r14\n\tPOPQ %%r13\n\tPOPQ %%r12\n\tPOPQ %%rbx\n");
 				fprintf(output, "\tMOVQ %%rbp, %%rsp\n\tPOPQ %%rbp\n\tret\n");
 			}else{
@@ -204,7 +205,7 @@ void decl_codegen(struct decl *d, FILE * output){
 		break;
 		}
 	}else if(d->symbol->kind == SYMBOL_LOCAL){
-		
+
 	}
 	decl_codegen(d->next, output);
 }
