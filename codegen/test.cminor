@@ -1,9 +1,6 @@
 s: integer;
 a: integer = 90;
-str: string;
-str1: string = "hello";
 
 main: function integer(h: boolean) = {
 	a = s = 10;
-	return a;
 }

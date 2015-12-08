@@ -103,7 +103,7 @@ void decl_resolve(struct decl *d){
 			d->symbol = sym;
 			printf("%s resolves to local %d\n", d->name, sym->which);
 		}
-		scope_bind(d->name, sym);
+		// scope_bind(d->name, sym);
 		d->symbol = sym;
 		expr_resolve(d->value);
 		if(d->code){

@@ -194,7 +194,7 @@ n_expr_list_block : expr_block TOKEN_COMMA n_expr_list_block
 			|	n_expr_list
 				{$$ = expr_create(EXPR_BLOCK, $1, 0);}
 	;
-expr		:	expr TOKEN_ASSGN expr_not_assgn
+expr		:	/*expr TOKEN_ASSGN expr_not_assgn*/ expr_not_assgn TOKEN_ASSGN expr
 				{$$ = expr_create(EXPR_ASSGN, $1, $3);}
 			|	expr_not_assgn 
 				{$$ = $1;}
