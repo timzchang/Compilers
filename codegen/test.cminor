@@ -4,5 +4,9 @@ str: string;
 str1: string = "hello";
 
 main: function integer(h: boolean) = {
-	5+5;
+	if(1>2){
+		return 0;
+	}else{
+		return 1;
+	}
 }

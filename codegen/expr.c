@@ -822,6 +822,7 @@ int expr_is_constant(struct expr *a){
 
 void expr_codegen(struct expr *e, FILE *output){
 	if(!e) return;
+	char reg_name[200];
 	switch(e->kind){
 	case EXPR_ADD:
 		expr_codegen(e->left, output);
@@ -857,7 +858,9 @@ void expr_codegen(struct expr *e, FILE *output){
 		register_free(e->left->reg);
 		break;
 	case EXPR_NAME:
-
+		e->reg = register_alloc();
+		symbol_code(e->symbol, reg_name);
+		fprintf(output, "MOV %s, %s\n", reg_name, register_name(e->reg));
 		break;
 	case EXPR_STRING:
 
@@ -920,13 +923,28 @@ void expr_codegen(struct expr *e, FILE *output){
 
 		break;
 	case EXPR_OR:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tOR %s, %s\n",register_name(e->left->reg), register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_AND:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tAND %s, %s\n",register_name(e->left->reg), register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_MOD:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tMOV %s, %%rax\n", register_name(e->left->reg));
+		fprintf(output, "\tCQTO\n");
+		fprintf(output, "\tIDIV %s\n",register_name(e->right->reg));
+		fprintf(output, "\tMOV %%rdx, %s\n", register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_BLOCK:
 
