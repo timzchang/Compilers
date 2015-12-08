@@ -981,13 +981,13 @@ void expr_codegen(struct expr *e, FILE *output){
 		break;
 	case EXPR_NOT:
 		expr_codegen(e->right, output);
-		fprintf(output, "\tNOT %s\n", register_name(e->right->reg));
+		fprintf(output, "\tXOR $1, %s\n", register_name(e->right->reg));
 		e->reg = e->right->reg;
 		break;
 	case EXPR_NEG:
 		expr_codegen(e->right, output);
 		fprintf(output, "\tNEG %s\n", register_name(e->right->reg));
-		fprintf(output, "\tADD $1, %s\n", register_name(e->right->reg));
+		//fprintf(output, "\tADD $1, %s\n", register_name(e->right->reg));
 		e->reg = e->right->reg;
 		break;
 	case EXPR_EXP:
