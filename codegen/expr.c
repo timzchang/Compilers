@@ -884,7 +884,17 @@ void expr_codegen(struct expr *e, FILE *output){
 
 		break;
 	case EXPR_LT:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJL .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOC $1, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
 		break;
 	case EXPR_GE:
 
