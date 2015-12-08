@@ -4,6 +4,6 @@ str: string;
 str1: string = "hello";
 
 main: function integer(h: boolean) = {
-	a++;
+	a = s = 10;
 	return a;
 }

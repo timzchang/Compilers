@@ -343,12 +343,12 @@ struct type * expr_typecheck(struct expr * e){
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
 			if(type_compare(L, R) == 0){
-				printf("type error: cannot divide ");
+				printf("type error: cannot assign ");
 				type_print(L);
 				printf(" (");
 				expr_print(e->left);
 				printf(")");
-				printf(" with ");
+				printf(" to ");
 				type_print(R);
 				printf(" (");
 				expr_print(e->right);
@@ -887,7 +887,10 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV $%d, %s\n", e->literal_value, register_name(e->reg));
 		break;
 	case EXPR_ASSGN:
-		
+		expr_codegen(e->right, output);
+		symbol_code(e->left->symbol, reg_name);
+		fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
+		e->reg = register_name(e->right->reg);
 		break;
 	case EXPR_GT:
 		expr_codegen(e->left, output);
@@ -1055,3 +1058,4 @@ void get_string(struct expr *e, FILE *output){
 		}
 	}
 }
+
