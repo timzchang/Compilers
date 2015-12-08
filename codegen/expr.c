@@ -814,10 +814,10 @@ int expr_compare(struct expr *a, struct expr *b){
 
 int expr_is_constant(struct expr *a){
 	if(!a) return 1;
-	if(a->name){
+	if(a->kind == EXPR_INT || a->kind == EXPR_BOOLEAN || a->kind == EXPR_CHAR || a->kind == EXPR_STRING){
 		return 0;
 	}
-	return (expr_is_constant(a->left) && expr_is_constant(a->right));
+	//return (expr_is_constant(a->left) && expr_is_constant(a->right));
 }
 
 void expr_codegen(struct expr *e, FILE *output){
@@ -881,7 +881,19 @@ void expr_codegen(struct expr *e, FILE *output){
 		
 		break;
 	case EXPR_GT:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJG .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_LT:
 		expr_codegen(e->left, output);
@@ -905,10 +917,34 @@ void expr_codegen(struct expr *e, FILE *output){
 
 		break;
 	case EXPR_EQ:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJE .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_NE:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJNE .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_NOT:
 
