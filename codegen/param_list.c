@@ -30,6 +30,12 @@ void param_list_resolve(struct param_list *p){
 		error_count++;
 	}else{
 		int *which = hash_table_lookup(h,"0params");  // which grabs the number of locals from the hash table
+		if(*which >6){
+			printf("resolve error: too many parameters");
+			error_count++;
+			printf("Error count: %d\n", error_count);
+			exit(1);
+		}
 		struct symbol *sym = symbol_create(SYMBOL_PARAM, p->type, p->name);
 		sym->which = *which;
 		*which += 1;

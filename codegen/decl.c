@@ -110,6 +110,8 @@ void decl_resolve(struct decl *d){
 			scope_enter();
 			param_list_resolve(d->type->params);
 			stmt_resolve(d->code);
+			d->symbol->local_count = which_local();
+			printf("locals: %d\n", sym->local_count);
 			scope_leave();
 			sym->code = 1;
 		}

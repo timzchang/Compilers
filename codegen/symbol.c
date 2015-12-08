@@ -11,6 +11,7 @@ struct symbol * symbol_create( symbol_t kind, struct type *type, char *name ){
 	s->name = name;  // for globals
 	// which = ; how do we keep track ?
 	s->which = 0;
+	s->local_count = 0;
 	return s;
 }
 

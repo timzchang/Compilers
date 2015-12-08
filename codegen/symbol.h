@@ -17,6 +17,7 @@ struct symbol {
 	struct type *type;
 	char *name;
 	int code;
+	int local_count;
 };
 
 struct symbol * symbol_create( symbol_t kind, struct type *type, char *name );

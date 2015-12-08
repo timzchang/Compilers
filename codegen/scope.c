@@ -14,7 +14,7 @@ void scope_enter(){
 	h_prev = h;  
 	h = h->next;
 	h->prev = h_prev;
-	if(scope_level() == 1){
+	if(scope_level() == 2){
 		hash_table_insert(h,"0params", params);  // insert params and locals counter
 		hash_table_insert(h,"0locals", locals);
 	}
@@ -79,6 +79,7 @@ void incr_local(){
 	*which += 1;
 }
 
+// which local returns the 
 int which_local(){
 	struct hash_table *h_cursor = h;
 	while(h_cursor != NULL){
