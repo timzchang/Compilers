@@ -24,20 +24,12 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-	MOV $0, %rbx
-	XOR $1, %rbx
-	CMP $0, %rbx
-	JE .L0
-	MOV $5, %r10
-	NEG %r10
-	MOV %r10, %rax
+MOV a, %rbx
+	ADD $1, %rbx
+	MOV %rbx, a
+MOV a, %rbx
+	MOV %rbx, %rax
 	jmp .RET
-	JMP .L1
-.L0:
-	MOV $0, %r10
-	MOV %r10, %rax
-	jmp .RET
-.L1:
 	#################### epilogue of function restores the stack
 	.RET:
 	POPQ %r15

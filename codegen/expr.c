@@ -862,7 +862,7 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_NAME:
 		e->reg = register_alloc();
 		symbol_code(e->symbol, reg_name);
-		fprintf(output, "MOV %s, %s\n", reg_name, register_name(e->reg));
+		fprintf(output, "\tMOV %s, %s\n", reg_name, register_name(e->reg));
 		break;
 	case EXPR_STRING:
 		e->reg = register_alloc();
@@ -994,10 +994,11 @@ void expr_codegen(struct expr *e, FILE *output){
 
 		break;
 	case EXPR_INCR:
-		e->reg = e->reg->left;
-		fprintf(output, "ADD $1, %s\n", register_name(e->left->reg));
-		symbol_code(e->left,reg_name)
-		fprintf(output, "MOV %s, %s\n", register_name(e->left->reg), reg_name);
+		expr_codegen(e->left, output);
+		e->reg = e->left->reg;
+		fprintf(output, "\tADD $1, %s\n", register_name(e->left->reg));
+		symbol_code(e->left->symbol,reg_name);
+		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_DECR:
 
