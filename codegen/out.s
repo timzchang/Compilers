@@ -24,10 +24,12 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-	MOV $1, %rbx
+	MOV $0, %rbx
+	XOR $1, %rbx
 	CMP $0, %rbx
 	JE .L0
-	MOV $1, %r10
+	MOV $5, %r10
+	NEG %r10
 	MOV %r10, %rax
 	jmp .RET
 	JMP .L1

@@ -868,7 +868,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		e->reg = register_alloc();
 		fprintf(output, ".data\n");
 		fprintf(output, "STR%d:\n", str_count);
-		fprintf(output, ".string") 
+		fprintf(output, ".string"); 
 		get_string(e, output);
 		fprintf(output, "\n.text\n");
 		fprintf(output, "LEA STR%d, %s\n", str_count, register_name(e->reg));
@@ -981,13 +981,13 @@ void expr_codegen(struct expr *e, FILE *output){
 		break;
 	case EXPR_NOT:
 		expr_codegen(e->right, output);
-		fprintf(output, "\tNOT %s\n", register_name(e->right->reg));
+		fprintf(output, "\tXOR $1, %s\n", register_name(e->right->reg));
 		e->reg = e->right->reg;
 		break;
 	case EXPR_NEG:
 		expr_codegen(e->right, output);
 		fprintf(output, "\tNEG %s\n", register_name(e->right->reg));
-		fprintf(output, "\tADD $1, %s\n", register_name(e->right->reg));
+		//fprintf(output, "\tADD $1, %s\n", register_name(e->right->reg));
 		e->reg = e->right->reg;
 		break;
 	case EXPR_EXP:
