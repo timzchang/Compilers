@@ -20,6 +20,7 @@ struct hash_table *h;
 int error_count;
 int reg[16] = {1,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0};  // free registers
 int label_count = 0;
+int str_count = 0;
 
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.

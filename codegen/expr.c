@@ -865,7 +865,13 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "MOV %s, %s\n", reg_name, register_name(e->reg));
 		break;
 	case EXPR_STRING:
-
+		e->reg = register_alloc();
+		fprintf(output, ".data\n");
+		fprintf(output, "STR%d\n", str_count);
+		fprintf(output, ".string \"%s\"\n", e->string_literal);
+		fprintf(output, ".text\n");
+		fprintf(output, "LEA STR%d, %s\n", str_count, register_name(e->reg));
+		str_count++;
 		break;
 	case EXPR_INT:
 		e->reg = register_alloc();
@@ -913,10 +919,34 @@ void expr_codegen(struct expr *e, FILE *output){
 		register_free(e->left->reg);
 		break;
 	case EXPR_GE:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJGE .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_LE:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+		fprintf(output, "\tJLE .L%d\n", label_count);
+		label_count++;
+		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_count++;
+		fprintf(output, ".L%d:\n", label_count-2);
+		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+		fprintf(output, ".L%d:\n", label_count-1);
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_EQ:
 		expr_codegen(e->left, output);
