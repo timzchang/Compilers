@@ -27,11 +27,11 @@ main:
 	MOV $1, %rbx
 	MOV $2, %r10
 	CMP %rbx, %r10
-	JL .L0
-	MOV $1, %r10
+	JNE .L0
+	MOV $0, %r10
 	JMP .L1
 .L0:
-	MOV $0, %r10
+	MOV $1, %r10
 .L1:
 	CMP $0, %r10
 	JE .L2
