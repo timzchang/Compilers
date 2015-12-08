@@ -247,7 +247,7 @@ expr_exp	:	expr_exp TOKEN_EXP expr_unary
 	;
 expr_unary 	:	TOKEN_NOT expr_unary
 				{$$ = expr_create(EXPR_NOT, 0, $2);}
-			|	TOKEN_NEGATION expr_unary
+			|	TOKEN_SUB expr_unary
 				{$$ = expr_create(EXPR_NEG, 0, $2);}
 			|	expr_incr
 				{$$ = $1;}

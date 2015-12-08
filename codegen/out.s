@@ -24,11 +24,18 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-.data
-STR0:
-.string "hi"
-.text
-LEA STR0, %rbx
+	MOV $1, %rbx
+	CMP $0, %rbx
+	JE .L0
+	MOV $1, %r10
+	MOV %r10, %rax
+	jmp .RET
+	JMP .L1
+.L0:
+	MOV $0, %r10
+	MOV %r10, %rax
+	jmp .RET
+.L1:
 	#################### epilogue of function restores the stack
 	.RET:
 	POPQ %r15
