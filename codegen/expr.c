@@ -325,8 +325,8 @@ struct type * expr_typecheck(struct expr * e){
 			return type_create(TYPE_CHARACTER, 0, 0, 0);
 			break;
 		case EXPR_ASSGN:
-			if(e->left->symbol){
-				if(e->left->symbol->type->kind == TYPE_FUNCTION){
+			//if(e->left->symbol){
+				if(L->kind == TYPE_FUNCTION || R->kind == TYPE_FUNCTION){
 					printf("type error: cannot assign ");
 					type_print(e->left->symbol->type);
 					printf(" (");
@@ -341,7 +341,7 @@ struct type * expr_typecheck(struct expr * e){
 					error_count++;
 					return type_create(e->right->symbol->type->kind, 0, 0, 0);
 				}
-			}
+			// }
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
 			if(type_compare(L, R) == 0){
@@ -358,7 +358,7 @@ struct type * expr_typecheck(struct expr * e){
 				printf("\n");
 				error_count++;
 			}
-			return type_create(e->left->symbol->type->kind, 0, 0, 0);
+			return type_create(R->kind, 0, 0, 0);
 			break;
 		case EXPR_GT:
 			// struct type * L = expr_typecheck(e->left);
@@ -1006,7 +1006,11 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_DECR:
-
+		expr_codegen(e->left, output);
+		e->reg = e->left->reg;
+		fprintf(output, "\tSUB $1, %s\n", register_name(e->left->reg));
+		symbol_code(e->left->symbol,reg_name);
+		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_BRACKET:
 
