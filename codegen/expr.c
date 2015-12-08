@@ -1,5 +1,6 @@
 #include "expr.h"
 #include "type.h"
+#include "register.h"
 #include <string.h>
 
 struct expr * expr_create( expr_t kind, struct expr *left, struct expr *right ){
@@ -820,18 +821,40 @@ int expr_is_constant(struct expr *a){
 }
 
 void expr_codegen(struct expr *e, FILE *output){
+	if(!e) return;
 	switch(e->kind){
 	case EXPR_ADD:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tADD %s, %s\n",register_name(e->left->reg), register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_SUB:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tSUB %s, %s\n",register_name(e->left->reg), register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_MULT:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tMOV %s, %%rax\n", register_name(e->left->reg));
+		fprintf(output, "\tIMUL %s\n",register_name(e->right->reg));
+		fprintf(output, "\tMOV %%rax, %s\n", register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_DIV:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tMOV %s, %%rax\n", register_name(e->left->reg));
+		fprintf(output, "\tCQTO\n");
+		fprintf(output, "\tIDIV %s\n",register_name(e->right->reg));
+		fprintf(output, "\tMOV %%rax, %s\n", register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_NAME:
 
@@ -840,13 +863,16 @@ void expr_codegen(struct expr *e, FILE *output){
 
 		break;
 	case EXPR_INT:
-
+		e->reg = register_alloc();
+		fprintf(output, "\tMOV $%d, %s\n", e->literal_value, register_name(e->reg));
 		break;
 	case EXPR_BOOLEAN:
-
+		e->reg = register_alloc();
+		fprintf(output, "\tMOV $%d, %s\n", e->literal_value, register_name(e->reg));
 		break;
 	case EXPR_CHAR:
-
+		e->reg = register_alloc();
+		fprintf(output, "\tMOV $%d, %s\n", e->literal_value, register_name(e->reg));
 		break;
 	case EXPR_ASSGN:
 		

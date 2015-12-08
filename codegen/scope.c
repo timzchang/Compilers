@@ -69,7 +69,7 @@ struct symbol * scope_lookup(const char * name){
 void incr_local(){
 	// int count=0;
 	struct hash_table *h_cursor = h;
-	while(h_cursor != NULL){
+	while(h_cursor->prev != NULL){
 		// h_cursor = hash_table_lookup(h_cursor, "0prev");
 		h_cursor = h_cursor->prev;
 		// count++;
@@ -82,10 +82,8 @@ void incr_local(){
 // which local returns the 
 int which_local(){
 	struct hash_table *h_cursor = h;
-	while(h_cursor != NULL){
-		// h_cursor = hash_table_lookup(h_cursor, "0prev");
+	while(h_cursor->prev != NULL){
 		h_cursor = h_cursor->prev;
-		// count++;
 	}
 	h_cursor = h_cursor->next;
 	int *which = hash_table_lookup(h_cursor, "0locals");

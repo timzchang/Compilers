@@ -27,8 +27,15 @@ int symbol_compare(struct symbol *a, struct symbol *b){
 		return 0;
 }
 
-char * symbol_code(struct symbol *s){  // return assembly-friendly representation of var
+void symbol_code(struct symbol *s, char *buffer){  // return assembly-friendly representation of var
 	if(s->kind == SYMBOL_GLOBAL){
-		return s->name;
+		// return s->name;
+		sprintf(buffer, "%s", s->name);
+	}else if(s->kind == SYMBOL_LOCAL){
+		sprintf(buffer, "-%d(%%rbp)", 56 + (8*s->which));
+		// return buffer;
+	}else{  // SYMBOL_PARAM
+		sprintf(buffer, "-%d(%%rbp)", 8 + (8*s->which));
+		// return buffer;
 	}
 }

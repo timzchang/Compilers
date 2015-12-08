@@ -111,7 +111,7 @@ void decl_resolve(struct decl *d){
 			param_list_resolve(d->type->params);
 			stmt_resolve(d->code);
 			d->symbol->local_count = which_local();
-			printf("locals: %d\n", sym->local_count);
+			// printf("locals: %d\n", sym->local_count);
 			scope_leave();
 			sym->code = 1;
 		}
@@ -154,6 +154,7 @@ void decl_typecheck(struct decl *d){
 
 void decl_codegen(struct decl *d, FILE * output){
 	if(!d) return;
+	char var_name[200];
 	if(d->symbol->kind == SYMBOL_GLOBAL){
 		switch(d->type->kind){
 		case TYPE_BOOLEAN:
@@ -161,28 +162,35 @@ void decl_codegen(struct decl *d, FILE * output){
 		case TYPE_INTEGER:
 			if(d->value){
 				fprintf(output, ".data\n");
-				fprintf(output, "%s: .quad %d\n", symbol_code(d->symbol), 10);  // need to write evaluation function?
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "%s: .quad %d\n", var_name, d->value->literal_value);  // need to write evaluation function?
 			}else{
 				fprintf(output, ".data\n");
-				fprintf(output, "%s: .quad 0\n", symbol_code(d->symbol));
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "%s: .quad 0\n", var_name);
 			}
 			break;
 		case TYPE_STRING:
 			if(d->value){
 				fprintf(output, ".data\n");
-				fprintf(output, "%s: .string ", symbol_code(d->symbol));
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "%s: .string ", var_name);
 				get_string(d->value, output);
 				fprintf(output, "\n");
 			}else{
 				fprintf(output, ".data\n");
-				fprintf(output, "%s: .string \"\"\n", symbol_code(d->symbol));
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "%s: .string \"\"\n", var_name);
 			}
 		case TYPE_FUNCTION:
 			if(d->code){
-				fprintf(output, ".text\n.globl %s\n%s:\n", symbol_code(d->symbol), symbol_code(d->symbol));
+				symbol_code(d->symbol, var_name);
+				fprintf(output, ".text\n.globl %s\n%s:\n", var_name, var_name);
 				fprintf(output, "\tPUSHQ %%rbp\n\tMOVQ %%rsp, %%rbp\n");
 				fprintf(output, "\tPUSHQ %%rdi\n\tPUSHQ %%rsi\n\tPUSHQ %%rdx\n\tPUSHQ %%rdi\n\tPUSHQ %%rcx\n\tPUSHQ %%r8\n\tPUSHQ %%r9\n");
-				fprintf(output, "\tSUBQ $16, %%rsp\n");
+				if(d->symbol->local_count > 0){
+					fprintf(output, "\tSUBQ $%d, %%rsp\n", 8*d->symbol->local_count);
+				}
 				fprintf(output, "\tPUSHQ %%rbx\n\tPUSHQ %%r12\n\tPUSHQ %%r13\n\tPUSHQ %%r14\n\tPUSHQ %%r15\n");
 				fprintf(output, "\t#################### body of function starts here\n");
 				stmt_codegen(d->code, output);
@@ -196,7 +204,7 @@ void decl_codegen(struct decl *d, FILE * output){
 		break;
 		}
 	}else if(d->symbol->kind == SYMBOL_LOCAL){
-
+		
 	}
 	decl_codegen(d->next, output);
 }

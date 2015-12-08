@@ -1,10 +1,8 @@
 s: integer;
-a: integer = 10;
+a: integer = 90;
 str: string;
 str1: string = "hello";
 
 main: function integer(h: boolean) = {
-	x: integer = 1;
-	q: string;
-	return 1;
+	5+5;
 }
