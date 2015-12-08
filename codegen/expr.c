@@ -892,7 +892,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->right, output);
 		symbol_code(e->left->symbol, reg_name);
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
-		e->reg = register_name(e->right->reg);
+		e->reg = e->right->reg;
 		break;
 	case EXPR_GT:
 		expr_codegen(e->left, output);
