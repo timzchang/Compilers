@@ -211,7 +211,7 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		break;
 	case STMT_IF_ELSE:
 		expr_codegen(s->expr, output);
-		fprintf(output, "\tCMP %s, $0\n", register_name(s->expr->reg));
+		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
 		fprintf(output, "\tJE .L%d\n", label_count);
 		stmt_codegen(s->body, output);
 		fprintf(output, "\tJMP .L%d\n", label_count+1);
@@ -225,7 +225,7 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		expr_codegen(s->init_expr, output);
 		fprintf(output, ".L%d:\n", label_count);
 		label_count++;
-		fprintf(output, "\tCMP %s, $0\n", register_name(s->expr->reg));
+		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
 		fprintf(output, "\tJE .L%d\n", label_count);
 		stmt_codegen(s->body, output);
 		expr_codegen(s->next_expr, output);

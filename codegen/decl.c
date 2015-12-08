@@ -93,10 +93,12 @@ void decl_resolve(struct decl *d){
 			scope_bind(d->name, sym);
 			printf("%s resolves to global %s\n", d->name, sym->name);
 		}else{
-			int *which = hash_table_lookup(h, "0locals");  // which grabs the number of locals from the hash table
+			// int *which = hash_table_lookup(h, "0locals");  // which grabs the number of locals from the hash table
+			int which = which_local();
 			sym = symbol_create(SYMBOL_LOCAL, d->type, d->name);
-			sym->which = *which;
-			*which += 1;
+			sym->which = which;
+			// *which += 1;
+			incr_local();
 			scope_bind(d->name, sym);
 			d->symbol = sym;
 			printf("%s resolves to local %d\n", d->name, sym->which);

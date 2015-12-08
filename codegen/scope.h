@@ -14,5 +14,7 @@ int scope_level();  // lookup current level?
 void scope_bind(const char * name, struct symbol *sym);  // insert into the current scope an entry binding a name to a symbol object
 struct symbol * scope_lookup_single(const char * name);  // see if this symbol exists in this scope
 struct symbol * scope_lookup(const char * name);
+void incr_local();
+int which_local();
 
 #endif

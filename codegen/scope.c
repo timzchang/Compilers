@@ -14,12 +14,10 @@ void scope_enter(){
 	h_prev = h;  
 	h = h->next;
 	h->prev = h_prev;
-	// hash_table_insert(h, "0next", hash_table_create(0,0));  // next pointer
-
-	// h = hash_table_lookup(h, "0next");  // shift
-	// hash_table_insert(h,"0prev", h_prev);  // now new table has a reverse pointer
-	hash_table_insert(h,"0params", params);  // insert params and locals counter
-	hash_table_insert(h,"0locals", locals);
+	if(scope_level() == 1){
+		hash_table_insert(h,"0params", params);  // insert params and locals counter
+		hash_table_insert(h,"0locals", locals);
+	}
 }
 
 // when we see }, go back one hash table and delete
@@ -66,4 +64,29 @@ struct symbol * scope_lookup(const char * name){
 		h_cursor = h_cursor->prev;
 	}
 	return NULL;
+}
+
+void incr_local(){
+	// int count=0;
+	struct hash_table *h_cursor = h;
+	while(h_cursor != NULL){
+		// h_cursor = hash_table_lookup(h_cursor, "0prev");
+		h_cursor = h_cursor->prev;
+		// count++;
+	}
+	h_cursor = h_cursor->next;
+	int *which = hash_table_lookup(h_cursor, "0locals");
+	*which += 1;
+}
+
+int which_local(){
+	struct hash_table *h_cursor = h;
+	while(h_cursor != NULL){
+		// h_cursor = hash_table_lookup(h_cursor, "0prev");
+		h_cursor = h_cursor->prev;
+		// count++;
+	}
+	h_cursor = h_cursor->next;
+	int *which = hash_table_lookup(h_cursor, "0locals");
+	return *which;
 }
