@@ -24,26 +24,11 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-	MOV $1, %rbx
-	MOV $2, %r10
-	CMP %rbx, %r10
-	JNE .L0
-	MOV $0, %r10
-	JMP .L1
-.L0:
-	MOV $1, %r10
-.L1:
-	CMP $0, %r10
-	JE .L2
-	MOV $0, %rbx
-	MOV %rbx, %rax
-	jmp .RET
-	JMP .L3
-.L2:
-	MOV $1, %rbx
-	MOV %rbx, %rax
-	jmp .RET
-.L3:
+.data
+STR0:
+.string "hi"
+.text
+LEA STR0, %rbx
 	#################### epilogue of function restores the stack
 	.RET:
 	POPQ %r15
