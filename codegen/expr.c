@@ -979,10 +979,14 @@ void expr_codegen(struct expr *e, FILE *output){
 		register_free(e->left->reg);
 		break;
 	case EXPR_NOT:
-
+		expr_codegen(e->right, output);
+		fprintf(output, "\tNOT %s", register_name(e->right->reg));
+		e->reg = e->right->reg;
 		break;
 	case EXPR_NEG:
-
+		expr_codegen(e->right, output);
+		fprintf(output, "\tNEG %s", register_name(e->right->reg));
+		e->reg = e->right->reg;
 		break;
 	case EXPR_EXP:
 
@@ -999,7 +1003,7 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_FUNC:
 
 		break;
-	case EXPR_LIST:
+	case EXPR_LIST:  // function calls and prints
 
 		break;
 	case EXPR_OR:
