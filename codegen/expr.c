@@ -868,8 +868,9 @@ void expr_codegen(struct expr *e, FILE *output){
 		e->reg = register_alloc();
 		fprintf(output, ".data\n");
 		fprintf(output, "STR%d:\n", str_count);
-		fprintf(output, ".string %s\n", e->string_literal);
-		fprintf(output, ".text\n");
+		fprintf(output, ".string") 
+		get_string(e, output);
+		fprintf(output, "\n.text\n");
 		fprintf(output, "LEA STR%d, %s\n", str_count, register_name(e->reg));
 		str_count++;
 		break;
