@@ -385,7 +385,7 @@ struct type * expr_typecheck(struct expr * e){
 		case EXPR_LT:
 			// struct type * L = expr_typecheck(e->left);
 			// struct type * R = expr_typecheck(e->right);
-			printf("I'm here\n");
+			//printf("I'm here\n");
 			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
 				printf("type error: cannot perform boolean logic on ");
 				type_print(L);

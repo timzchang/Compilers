@@ -259,9 +259,9 @@ void stmt_codegen(struct stmt *s, FILE *output){
 			}else{
 				printf("multiple expr\n");
 				e_cursor = s->expr;
-				expr_print(e_cursor->left);
-				printf("\n");
-				expr_print(e_cursor->right);
+				//expr_print(e_cursor->left);
+				//printf("\n");
+				//expr_print(e_cursor->right);
 				while(e_cursor->right->kind == EXPR_LIST){
 					printf("more exprs\n");
 					expr_print_codegen(e_cursor->left, output);
