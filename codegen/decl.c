@@ -205,7 +205,19 @@ void decl_codegen(struct decl *d, FILE * output){
 		break;
 		}
 	}else if(d->symbol->kind == SYMBOL_LOCAL){
-
+		switch(d->type->kind){
+		case TYPE_BOOLEAN:
+			break;
+		case TYPE_CHARACTER:
+			break;
+		case TYPE_INTEGER:
+			break;
+		case TYPE_STRING:
+			
+			break;
+		default:
+			
+		}
 	}
 	decl_codegen(d->next, output);
 }

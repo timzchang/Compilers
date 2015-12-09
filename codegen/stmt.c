@@ -202,6 +202,7 @@ void stmt_typecheck(struct stmt *s, struct decl *d){
 
 void stmt_codegen(struct stmt *s, FILE *output){
 	if(!s) return;
+	int label_save, label_save1;
 	struct expr *e_cursor;
 	switch(s->kind){
 	case STMT_DECL:
@@ -215,24 +216,33 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		expr_codegen(s->expr, output);
 		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
 		fprintf(output, "\tJE .L%d\n", label_count);
+		label_save = label_count;
+		label_count++;
 		stmt_codegen(s->body, output);
-		fprintf(output, "\tJMP .L%d\n", label_count+1);
-		fprintf(output, ".L%d:\n", label_count);
+		fprintf(output, "\tJMP .L%d\n", label_count);
+		label_save1 = label_count;
+		label_count++;
+		fprintf(output, ".L%d:\n", label_save);
 		stmt_codegen(s->else_body, output);
-		label_count++;
-		fprintf(output, ".L%d:\n", label_count);
-		label_count++;
+		fprintf(output, ".L%d:\n", label_save1);
+		
 		break;
 	case STMT_FOR:
 		expr_codegen(s->init_expr, output);
 		fprintf(output, ".L%d:\n", label_count);
+		label_save = label_count;
 		label_count++;
 		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
 		fprintf(output, "\tJE .L%d\n", label_count);
-		stmt_codegen(s->body, output);
+		label_save1 = label_count;
+		// stuff
+		stmt_codegen(s->body, output);  // labelcount can be incremented in here
+		// end stuff
 		expr_codegen(s->next_expr, output);
-		fprintf(output, "\tJMP .L%d\n", label_count-1);
-		fprintf(output, ".L%d:\n", label_count);
+		fprintf(output, "\tJMP .L%d\n", label_save);
+		
+		fprintf(output, ".L%d:\n", label_save1);
+		label_save1 = label_count;
 		label_count++;
 		break;
 	case STMT_PRINT:
