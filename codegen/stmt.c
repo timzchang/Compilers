@@ -215,6 +215,7 @@ void stmt_codegen(struct stmt *s, FILE *output){
 	case STMT_IF_ELSE:
 		expr_codegen(s->expr, output);
 		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
+		register_free(s->expr->reg);
 		fprintf(output, "\tJE .L%d\n", label_count);
 		label_save = label_count;
 		label_count++;
@@ -229,9 +230,12 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		break;
 	case STMT_FOR:
 		expr_codegen(s->init_expr, output);
+		register_free(s->init_expr->reg);
 		fprintf(output, ".L%d:\n", label_count);
 		label_save = label_count;
 		label_count++;
+		expr_codegen(s->expr, output);
+		register_free(s->expr->reg);
 		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
 		fprintf(output, "\tJE .L%d\n", label_count);
 		label_save1 = label_count;
@@ -239,6 +243,7 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		stmt_codegen(s->body, output);  // labelcount can be incremented in here
 		// end stuff
 		expr_codegen(s->next_expr, output);
+		register_free(s->next_expr->reg);
 		fprintf(output, "\tJMP .L%d\n", label_save);
 		
 		fprintf(output, ".L%d:\n", label_save1);
@@ -252,8 +257,13 @@ void stmt_codegen(struct stmt *s, FILE *output){
 				//printf("Single expr\n");
 				expr_print_codegen(s->expr, output);
 			}else{
+				printf("multiple expr\n");
 				e_cursor = s->expr;
+				expr_print(e_cursor->left);
+				printf("\n");
+				expr_print(e_cursor->right);
 				while(e_cursor->right->kind == EXPR_LIST){
+					printf("more exprs\n");
 					expr_print_codegen(e_cursor->left, output);
 					e_cursor = e_cursor->right;
 				}

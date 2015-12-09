@@ -104,7 +104,8 @@ void expr_print( struct expr *e ){
 		printf("%s",e->name);
 		break;
 	case EXPR_STRING:
-		printf("\"");
+		printf("printing string\n");
+		//printf("\"");
 		int i;
 		for(i=0; i<strlen(e->string_literal); i++){
 			if(e->string_literal[i]==0){
@@ -115,7 +116,7 @@ void expr_print( struct expr *e ){
 				printf("%c",e->string_literal[i]);
 			}
 		}
-		printf("%s",e->string_literal);
+		//printf("%s",e->string_literal);
 		break;
 	case EXPR_INT:
 		printf("%d",e->literal_value);
@@ -127,6 +128,7 @@ void expr_print( struct expr *e ){
 			printf("false");
 		break;
 	case EXPR_CHAR:
+		printf("printing char\n");
 		if(e->literal_value == 0x0A)
 			printf("%s", "\'\\n\'");
 		else
@@ -1075,7 +1077,7 @@ void expr_print_codegen(struct expr *e, FILE *output){
 	expr_codegen(e, output);
 	t = expr_typecheck(e);
 	char name[200];
-	printf("%d\n", t->kind);
+	//printf("%d\n", t->kind);
 	switch(t->kind){
 		case TYPE_INTEGER:
 			sprintf(name, "integer");
@@ -1102,5 +1104,6 @@ void expr_print_codegen(struct expr *e, FILE *output){
 	fprintf(output, "\tPOPQ %%r11\n");
 	fprintf(output, "\tPOPQ %%r10\n");
 	fprintf(output, "\tPOPQ %%rdi\n");
+	register_free(e->reg);
 }
 
