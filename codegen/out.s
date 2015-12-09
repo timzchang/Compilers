@@ -2,10 +2,6 @@
 s: .quad 0
 .data
 a: .quad 90
-.data
-str: .string ""
-.data
-str1: .string "hello"
 .text
 .globl main
 main:
@@ -24,14 +20,11 @@ main:
 	PUSHQ %r14
 	PUSHQ %r15
 	#################### body of function starts here
-MOV a, %rbx
-	ADD $1, %rbx
+	MOV $10, %rbx
+	MOV %rbx, s
 	MOV %rbx, a
-MOV a, %rbx
-	MOV %rbx, %rax
-	jmp .RET
 	#################### epilogue of function restores the stack
-	.RET:
+	.RET0:
 	POPQ %r15
 	POPQ %r14
 	POPQ %r13

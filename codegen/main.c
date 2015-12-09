@@ -177,10 +177,8 @@ int codegen(char *file, char *output_file){
 			exit(1);
 		}
 		decl_codegen(parser_result, output);
-		printf("r[0] %d\nr[1] %d\nr[2] %d\nr[3] %d\nr[4] %d\nr[5] %d\nr[6] %d\nr[7] %d\nr[8] %d\n
-			r[9] %d\nr[10] %d\nr[11] %d\nr[12] %d\nr[13] %d\nr[14] %d\nr[15] %d\n",
-			r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10], r[11], 
-			r[12], r[13], r[14], r[15]);
+		printf("r[0] %d\nr[1] %d\nr[2] %d\nr[3] %d\nr[4] %d\nr[5] %d\nr[6] %d\nr[7] %d\nr[8] %d\nr[9] %d\nr[10] %d\nr[11] %d\nr[12] %d\nr[13] %d\nr[14] %d\nr[15] %d\n",
+			reg[0], reg[1], reg[2], reg[3], reg[4], reg[5], reg[6], reg[7], reg[8], reg[9], reg[10], reg[11], reg[12], reg[13], reg[14], reg[15]);
 		return 0;
 	}else{
 		fprintf(stderr, "error, can't be parsed\n");

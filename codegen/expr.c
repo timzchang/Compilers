@@ -207,6 +207,7 @@ void expr_resolve(struct expr *e){
 		//s = scope_lookup(e->name);
 		struct symbol *s = scope_lookup(e->name);
 		if(s){
+			printf("symbol set\n");
 			e->symbol = s;
 			if(e->symbol->kind == SYMBOL_LOCAL){
 				printf("%s resolves to local %d\n", e->name, e->symbol->which);
@@ -890,6 +891,10 @@ void expr_codegen(struct expr *e, FILE *output){
 		break;
 	case EXPR_ASSGN:
 		expr_codegen(e->right, output);
+		//expr_print(e->right);
+		//printf("\n");
+		//expr_print(e->left);
+		//printf("\nhere\n");
 		symbol_code(e->left->symbol, reg_name);
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
 		e->reg = e->right->reg;

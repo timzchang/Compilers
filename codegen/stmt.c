@@ -106,6 +106,7 @@ void stmt_resolve(struct stmt *s){
 			decl_resolve(s->decl);
 			break;
 		case STMT_EXPR:
+			//printf("resolving a=s=10;\n");
 			expr_resolve(s->expr);
 			break;
 		case STMT_IF_ELSE:
