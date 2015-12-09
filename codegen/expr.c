@@ -276,7 +276,6 @@ struct type * expr_typecheck(struct expr * e){
 			return type_create(TYPE_INTEGER, 0, 0, 0);  // assume the type for expressions
 			break;
 		case EXPR_MULT:
-			
 			if(L->kind != TYPE_INTEGER || R->kind != TYPE_INTEGER){
 				printf("type error: cannot multiply ");
 				type_print(L);
@@ -905,7 +904,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJG .L%d\n", label_count);
+		fprintf(output, "\tJGE .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
@@ -920,7 +919,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJL .L%d\n", label_count);
+		fprintf(output, "\tJLE .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
@@ -935,7 +934,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJGE .L%d\n", label_count);
+		fprintf(output, "\tJG .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
@@ -950,7 +949,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJLE .L%d\n", label_count);
+		fprintf(output, "\tJL .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
