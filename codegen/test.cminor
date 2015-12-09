@@ -1,12 +1,5 @@
 i: integer = 0;
 main: function integer(h: boolean) = {
-	//print "hello world\n", 5, "\n";
-	for(i=0;i<10;i++)
-		print i, "\n";
-
-	//if(true){
-	//	print "true";
-	//}else{
-
-	//}
+	print 10>1, "\n";
+	print 10>1, "\n";
 }
