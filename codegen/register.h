@@ -1,3 +1,5 @@
+#ifndef REGISTER_H
+#define REGISTER_H
 #include <stdio.h>
 #include <stdlib.h>
 #include "global.h"
@@ -25,4 +27,6 @@ typedef enum{  // might be useful for indexing
 
 const char * register_name(int r);  // returns name of register in array indexed by e->reg
 int register_alloc();  // find free register
-void register_free(int r);  
+void register_free(int r); 
+
+#endif 

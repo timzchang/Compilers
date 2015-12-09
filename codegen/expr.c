@@ -1075,26 +1075,32 @@ void expr_print_codegen(struct expr *e, FILE *output){
 	expr_codegen(e, output);
 	t = expr_typecheck(e);
 	char name[200];
+	printf("%d\n", t->kind);
 	switch(t->kind){
 		case TYPE_INTEGER:
 			sprintf(name, "integer");
+			break;
 		case TYPE_BOOLEAN:
 			sprintf(name, "boolean");
+			break;
 		case TYPE_CHARACTER:
 			sprintf(name, "character");
+			break;
 		case TYPE_STRING:
 			sprintf(name, "string");
+			break;
 		default:
-			printf("Error: expression unprintable\n")
+			printf("Error: expression unprintable\n");
 			exit(1);
 	}
 
 	fprintf(output, "\tPUSHQ %%rdi\n");
 	fprintf(output, "\tPUSHQ %%r10\n");
 	fprintf(output, "\tPUSHQ %%r11\n");
+	fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->reg));
 	fprintf(output, "\tCALL print_%s\n", name);
-	fprintf(output, "POPQ %%r11\n");
-	fprintf(output, "POPQ %%r10\n");
-	fprintf(output, "POPQ %%rdi\n");
+	fprintf(output, "\tPOPQ %%r11\n");
+	fprintf(output, "\tPOPQ %%r10\n");
+	fprintf(output, "\tPOPQ %%rdi\n");
 }
 

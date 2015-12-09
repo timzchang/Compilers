@@ -236,17 +236,19 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		label_count++;
 		break;
 	case STMT_PRINT:
+		printf("I'm here\n");
 		if(s->expr){
 			if(s->expr->kind!=EXPR_LIST){  // if the thing is a single expr
+				printf("Single expr\n");
 				expr_print_codegen(s->expr, output);
 			}else{
 				e_cursor = s->expr;
-				while(e->right->kind == EXPR_LIST){
-					expr_print_codegen(e->left, output);
-					e = e->right;
+				while(e_cursor->right->kind == EXPR_LIST){
+					expr_print_codegen(e_cursor->left, output);
+					e_cursor = e_cursor->right;
 				}
-				expr_print_codegen(e->left, output);
-				expr_print_codegen(e->right, output);
+				expr_print_codegen(e_cursor->left, output);
+				expr_print_codegen(e_cursor->right, output);
 			}
 		}else{
 			// do nothing

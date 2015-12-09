@@ -22,4 +22,4 @@ parser.tab.c parser.tab.h: parser.bison
 # clean causes all intermediate files to be deleted.
 
 clean:
-	rm -f parser.tab.* parser.output scanner.c *.o calc $(target) a.out
+	rm -f parser.tab.* parser.output scanner.c *.o calc $(target) a.out exec out.s
