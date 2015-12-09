@@ -1,5 +1,12 @@
 i: integer = 0;
-main: function integer(h: boolean) = {
-	print 10>1, "\n";
-	print 10>1, "\n";
+main: function integer(h: boolean) = {	
+	if(10==10){
+		print "true\n";
+	}else{
+		print "false\n";
+	}
+	//print 10<=10, "\n";
+	//print 9<=10, "\n";
+	//print 11<=10, "\n";
+	//print 10>1, "\n";
 }

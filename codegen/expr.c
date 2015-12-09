@@ -934,7 +934,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJG .L%d\n", label_count);
+		fprintf(output, "\tJLE .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
@@ -949,7 +949,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
 		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJL .L%d\n", label_count);
+		fprintf(output, "\tJGE .L%d\n", label_count);
 		label_count++;
 		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
 		fprintf(output, "\tJMP .L%d\n", label_count);
