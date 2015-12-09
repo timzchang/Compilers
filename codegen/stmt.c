@@ -202,6 +202,7 @@ void stmt_typecheck(struct stmt *s, struct decl *d){
 
 void stmt_codegen(struct stmt *s, FILE *output){
 	if(!s) return;
+	struct expr *e_cursor;
 	switch(s->kind){
 	case STMT_DECL:
 		decl_codegen(s->decl, output);
@@ -235,7 +236,21 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		label_count++;
 		break;
 	case STMT_PRINT:
-
+		if(s->expr){
+			if(s->expr->kind!=EXPR_LIST){  // if the thing is a single expr
+				expr_print_codegen(s->expr, output);
+			}else{
+				e_cursor = s->expr;
+				while(e->right->kind == EXPR_LIST){
+					expr_print_codegen(e->left, output);
+					e = e->right;
+				}
+				expr_print_codegen(e->left, output);
+				expr_print_codegen(e->right, output);
+			}
+		}else{
+			// do nothing
+		}
 		break;
 	case STMT_RETURN:
 		expr_codegen(s->expr, output);

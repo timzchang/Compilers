@@ -1070,3 +1070,31 @@ void get_string(struct expr *e, FILE *output){
 	}
 }
 
+void expr_print_codegen(struct expr *e, FILE *output){
+	struct type *t;
+	expr_codegen(e, output);
+	t = expr_typecheck(e);
+	char name[200];
+	switch(t->kind){
+		case TYPE_INTEGER:
+			sprintf(name, "integer");
+		case TYPE_BOOLEAN:
+			sprintf(name, "boolean");
+		case TYPE_CHARACTER:
+			sprintf(name, "character");
+		case TYPE_STRING:
+			sprintf(name, "string");
+		default:
+			printf("Error: expression unprintable\n")
+			exit(1);
+	}
+
+	fprintf(output, "\tPUSHQ %%rdi\n");
+	fprintf(output, "\tPUSHQ %%r10\n");
+	fprintf(output, "\tPUSHQ %%r11\n");
+	fprintf(output, "\tCALL print_%s\n", name);
+	fprintf(output, "POPQ %%r11\n");
+	fprintf(output, "POPQ %%r10\n");
+	fprintf(output, "POPQ %%rdi\n");
+}
+

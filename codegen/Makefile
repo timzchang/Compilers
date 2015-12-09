@@ -1,5 +1,11 @@
-all: cminor
+all: cminor exec
 target = cminor
+
+exec: out.s library.o
+	gcc out.s library.o -o exec
+
+out.s:
+	./cminor -codegen test.cminor out.s
 
 cminor: main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o register.o
 	gcc -g -O0 -gdwarf-2  main.o decl.o param_list.o stmt.o expr.o type.o scanner.o parser.tab.o token.o symbol.o scope.o hash_table.o register.o -o $(target)

@@ -70,5 +70,6 @@ int expr_compare(struct expr *a, struct expr *b);
 int expr_is_constant(struct expr *a);
 void expr_codegen(struct expr *a, FILE *output);
 void get_string(struct expr *e, FILE *output);
+void expr_print_codegen(struct expr *e, FILE *output);
 
 #endif
