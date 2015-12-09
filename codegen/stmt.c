@@ -246,10 +246,10 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		label_count++;
 		break;
 	case STMT_PRINT:
-		printf("I'm here\n");
+		//printf("I'm here\n");
 		if(s->expr){
 			if(s->expr->kind!=EXPR_LIST){  // if the thing is a single expr
-				printf("Single expr\n");
+				//printf("Single expr\n");
 				expr_print_codegen(s->expr, output);
 			}else{
 				e_cursor = s->expr;

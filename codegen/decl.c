@@ -216,7 +216,8 @@ void decl_codegen(struct decl *d, FILE * output){
 			
 			break;
 		default:
-			
+			printf("why you here?\n");
+			exit(1);	
 		}
 	}
 	decl_codegen(d->next, output);
