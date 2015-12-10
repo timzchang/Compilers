@@ -1031,11 +1031,14 @@ void expr_codegen(struct expr *e, FILE *output){
 		break;
 	case EXPR_FUNC:
 		if(!e->right){
+			e->reg = register_alloc();
 			fprintf(output, "\tPUSHQ %%r10\n");
 			fprintf(output, "\tPUSHQ %%r11\n");
 			fprintf(output, "\tCALL %s\n", e->left->string_literal);
 			fprintf(output, "\tPOPQ %%r11\n");
 			fprintf(output, "\tPOPQ %%r10\n");
+			fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
+
 		}
 		break;
 	case EXPR_LIST:  // function calls and prints
