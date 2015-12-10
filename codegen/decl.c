@@ -205,6 +205,7 @@ void decl_codegen(struct decl *d, FILE * output){
 		break;
 		}
 	}else if(d->symbol->kind == SYMBOL_LOCAL){
+		struct expr *e;
 		switch(d->type->kind){
 		case TYPE_BOOLEAN:
 		case TYPE_CHARACTER:
@@ -226,15 +227,17 @@ void decl_codegen(struct decl *d, FILE * output){
 				fprintf(output, "\tMOVQ %s, %s\n", register_name(d->value->reg), var_name);
 				register_free(d->value->reg);
 			}else{
-				// e->reg = register_alloc();
+				e->reg = register_alloc();
 				fprintf(output, ".data\n");
 				fprintf(output, ".STR%d:\n", str_count);
 				fprintf(output, ".string \"\""); 
 				// get_string(e, output);
 				fprintf(output, "\n.text\n");
 				symbol_code(d->symbol, var_name);
-				fprintf(output, "\tLEA .STR%d, %s\n", str_count, var_name);
+				fprintf(output, "LEA .STR%d, %s\n", str_count, register_name(e->reg));
+				fprintf(output, "\tMOV %s, %s\n", register_name(e->reg), var_name);
 				str_count++;
+				register_free(e->reg);
 			}
 			break;
 		default:
