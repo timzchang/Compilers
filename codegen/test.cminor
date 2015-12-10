@@ -1,6 +1,7 @@
-f: function integer(h: integer);
+gfx_color: function integer(h: integer);
+gfx_line: function integer(a: integer);
 
 main: function integer(h: boolean) = {	
-	print "hello", '\n';
+	gfx_color(10);
 }
 
