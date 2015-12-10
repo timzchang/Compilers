@@ -27,6 +27,7 @@ int arg_count = 0;
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.
 */
+
 void edit_string(char * word){
 	int i, j, k;
 	for(i=1;i<strlen(word);i++){
@@ -54,23 +55,7 @@ void edit_string(char * word){
 			}
 		}
         }
-	printf("%s\n", word);
-	/*for(i=0;i<strlen(word)+1;i++){
-		if(word[i]=='\\'){
-			if(word[i+1]=='0'){
-				word[i]='\0';
-				
-			}else if(word[i+1]=='n'){
-				word[i]='\n';
-			}else{
-				word[i] = word[i+1];
-			}
-			for(j=i+1;j<strlen(word);j++){
-				word[j] = word[j+1];
-			}
-			word[j+1]='\0';
-		}
-	}*/
+	//printf("%s\n", word);
 }
 
 int scan(char *file){
