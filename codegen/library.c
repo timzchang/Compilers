@@ -25,6 +25,7 @@ x = integer_power(a,b);
 */
 
 #include <stdio.h>
+#include <string.h>
 
 void print_integer( int x )
 {

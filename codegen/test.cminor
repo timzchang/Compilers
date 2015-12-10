@@ -1,4 +1,13 @@
 main: function integer(h: boolean) = {
-	print "hello world", '\n';
+	if("hi" == "h"){
+		print 1, '\n';
+		return 1;
+	}else{
+		print 0, '\n';
+		return 0;
+	}
+
+	//"h" == "h";
+	//return 1;
 }
 
