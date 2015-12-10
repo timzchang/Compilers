@@ -1,9 +1,4 @@
-i: integer = 0;
-a: string = "hello";
 main: function integer(h: boolean) = {	
-	/*x: integer = 0;
-	y: integer = 5;
-	t: boolean;
-	print x, "\n", y, "\n", t;
-	//t = false;*/
+	s: string = "hello world\n";
+	print s;
 }
