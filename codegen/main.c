@@ -27,9 +27,10 @@ int arg_count = 0;
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.
 */
-
+/*
 void edit_string(char * word){
 	int i, j, k;
+	if(strlen(word) > 1){
 	for(i=1;i<strlen(word);i++){
 		word[i-1] = word[i];
 	}	
@@ -56,7 +57,8 @@ void edit_string(char * word){
 		}
         }
 	//printf("%s\n", word);
-}
+	}
+}*/
 
 int scan(char *file){
 	extern FILE * yyin;

@@ -1,5 +1,6 @@
 #include "token.h"
 #include<stdio.h>
+#include<string.h>
 
 const char * token_string(token_t t){
 	switch(t){
@@ -144,7 +145,7 @@ const char * token_string(token_t t){
 	}
 }
 
-/*void edit_string(char * word){
+void edit_string(char * word){
 	int i, j, k;
 	for(i=1;i<strlen(word);i++){
 		word[i-1] = word[i];
@@ -172,5 +173,6 @@ const char * token_string(token_t t){
 		}
         }
 	//printf("%s\n", word);
-}*/
+}
+
 

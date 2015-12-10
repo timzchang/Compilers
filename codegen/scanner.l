@@ -22,7 +22,7 @@ string		{return TOKEN_STRING;}
 {string} 	{return TOKEN_STRING_LITERAL;}
 {number} 	{return TOKEN_INT_LITERAL;}
 integer		{return TOKEN_INT;}
-\'(((\\)?[^\\])|(\\\\))\'	{return TOKEN_CHAR_LITERAL;}
+\'(((\\)?[^\\])|(\\\\))\'	{edit_string(yytext); return TOKEN_CHAR_LITERAL;}
 char		{return TOKEN_CHAR;}
 array		{return TOKEN_ARRAY;}
 boolean		{return TOKEN_BOOLEAN;}
