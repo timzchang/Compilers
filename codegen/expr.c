@@ -831,6 +831,7 @@ void expr_codegen(struct expr *e, FILE *output){
 	char reg_name[200];
 	char arg_reg[6][100] = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
 	int i;
+	struct expr *e_cursor;
 	switch(e->kind){
 	case EXPR_ADD:
 		expr_codegen(e->left, output);
@@ -1032,30 +1033,31 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_FUNC:
-		/*if(!e->right){
-			e->reg = register_alloc();
-			fprintf(output, "\tPUSHQ %%r10\n");
-			fprintf(output, "\tPUSHQ %%r11\n");
-			fprintf(output, "\tCALL %s\n", e->left->name);
-			fprintf(output, "\tPOPQ %%r11\n");
-			fprintf(output, "\tPOPQ %%r10\n");
-			fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
-		}else{*/
-			e->reg = register_alloc();
-			fprintf(output, "\tPUSHQ %%r10\n");
-			fprintf(output, "\tPUSHQ %%r11\n");
+		e->reg = register_alloc();
+		fprintf(output, "\tPUSHQ %%r10\n");
+		fprintf(output, "\tPUSHQ %%r11\n");
+		if(e->right->kind != EXPR_LIST){
 			expr_codegen(e->right, output);
-			fprintf(output, "\tCALL %s\n", e->left->name);
-			for(i = arg_count-1;i>=0; i--){
-				fprintf(output, "\tPOPQ %s\n", arg_reg[i]);
-			}
-			fprintf(output, "\tPOPQ %%r11\n");
-			fprintf(output, "\tPOPQ %%r10\n");
-			fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
-		// }
+			fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->right->reg));
+			arg_count++;
+			register_free(e->right->reg);
+		}else{
+			expr_codegen(e->right, output);
+		}
+		fprintf(output, "\tCALL %s\n", e->left->name);
+		for(i = arg_count-1;i>=0; i--){
+			fprintf(output, "\tPOPQ %s\n", arg_reg[i]);
+		}
+		fprintf(output, "\tPOPQ %%r11\n");
+		fprintf(output, "\tPOPQ %%r10\n");
+		fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
 		break;
 	case EXPR_LIST:  // function calls and prints
-
+		e_cursor = e;
+		while(e_cursor->right->kind == EXPR_LIST){
+			//generate push code
+			// increment counter
+		}
 		break;
 	case EXPR_OR:
 		expr_codegen(e->left, output);
