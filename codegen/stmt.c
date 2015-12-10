@@ -167,7 +167,7 @@ void stmt_typecheck(struct stmt *s, struct decl *d){
 		case STMT_FOR:
 			expr_typecheck(s->init_expr);
 			t = expr_typecheck(s->expr);
-			printf("%d\n", t->kind);
+			//printf("%d\n", t->kind);
 			if(t->kind != TYPE_BOOLEAN && t->kind != TYPE_VOID){
 				printf("type error: expression in for loop (");
 				expr_print(s->expr);

@@ -209,14 +209,14 @@ void expr_resolve(struct expr *e){
 		//s = scope_lookup(e->name);
 		struct symbol *s = scope_lookup(e->name);
 		if(s){
-			printf("symbol set\n");
+			//printf("symbol set\n");
 			e->symbol = s;
 			if(e->symbol->kind == SYMBOL_LOCAL){
-				printf("%s resolves to local %d\n", e->name, e->symbol->which);
+				//printf("%s resolves to local %d\n", e->name, e->symbol->which);
 			}else if(e->symbol->kind == SYMBOL_PARAM){
-				printf("%s resolves to param %d\n", e->name, e->symbol->which);
+				//printf("%s resolves to param %d\n", e->name, e->symbol->which);
 			}else{
-				printf("%s resolves to global %s\n", e->name, e->symbol->name);
+				//printf("%s resolves to global %s\n", e->name, e->symbol->name);
 			}
 		}else{
 			printf("resolve error: %s is not defined\n", e->name);

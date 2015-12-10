@@ -41,7 +41,7 @@ void param_list_resolve(struct param_list *p){
 		*which += 1;
 		scope_bind(p->name, sym);
 		p->symbol = sym;
-		printf("%s resolves to param %d\n", p->name, sym->which);
+		//printf("%s resolves to param %d\n", p->name, sym->which);
 	}
 	param_list_resolve(p->next);
 }

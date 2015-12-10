@@ -73,7 +73,7 @@ void decl_resolve(struct decl *d){
 					error_count++;
 				}else{  // defining a prototype
 					d->symbol = sym;
-					printf("%s resolves to global %s\n", d->name, sym->name);
+					//printf("%s resolves to global %s\n", d->name, sym->name);
 					sym->code = 1;
 					scope_enter();
 					param_list_resolve(d->type->params);
@@ -91,7 +91,7 @@ void decl_resolve(struct decl *d){
 			kind = SYMBOL_GLOBAL;
 			sym = symbol_create(kind, d->type, d->name);
 			scope_bind(d->name, sym);
-			printf("%s resolves to global %s\n", d->name, sym->name);
+			//printf("%s resolves to global %s\n", d->name, sym->name);
 		}else{
 			// int *which = hash_table_lookup(h, "0locals");  // which grabs the number of locals from the hash table
 			int which = which_local();
@@ -101,7 +101,7 @@ void decl_resolve(struct decl *d){
 			incr_local();
 			scope_bind(d->name, sym);
 			d->symbol = sym;
-			printf("%s resolves to local %d\n", d->name, sym->which);
+			//printf("%s resolves to local %d\n", d->name, sym->which);
 		}
 		// scope_bind(d->name, sym);
 		d->symbol = sym;
