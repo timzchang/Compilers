@@ -230,13 +230,16 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		break;
 	case STMT_FOR:
 		expr_codegen(s->init_expr, output);  // i = something
-		register_free(s->init_expr->reg);
+		if(s->init_expr)
+			register_free(s->init_expr->reg);
 		fprintf(output, ".L%d:\n", label_count);  // this is the L we jump back to
 		label_save = label_count;
 		label_count++;
 		expr_codegen(s->expr, output);  // (i<10) or something
-		register_free(s->expr->reg);
-		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));  // 
+		if(s->expr){
+			register_free(s->expr->reg);
+			fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));  // 
+		}
 		fprintf(output, "\tJE .L%d\n", label_count);
 		label_save1 = label_count;
 		label_count++;
@@ -244,7 +247,8 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		stmt_codegen(s->body, output);  // labelcount can be incremented in here
 		// end stuff
 		expr_codegen(s->next_expr, output);
-		register_free(s->next_expr->reg);
+		if(s->next_expr)
+			register_free(s->next_expr->reg);
 		fprintf(output, "\tJMP .L%d\n", label_save);
 		fprintf(output, ".L%d:\n", label_save1);
 		break;
