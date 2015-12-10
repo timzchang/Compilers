@@ -1,8 +1,6 @@
 f: function integer(h: integer);
 
 main: function integer(h: boolean) = {	
-	for(;;){
-		print "hello\n";
-	}
+	print "hello", '\n';
 }
 
