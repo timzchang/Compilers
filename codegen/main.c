@@ -27,38 +27,6 @@ int arg_count = 0;
 /*	Precondition: an unedited char ptr
 	Postcondition: string is modified to get rid of null char and white space.
 */
-/*
-void edit_string(char * word){
-	int i, j, k;
-	if(strlen(word) > 1){
-	for(i=1;i<strlen(word);i++){
-		word[i-1] = word[i];
-	}	
-	word[i-2] = '\0';
-
-	for(i = 0; i < strlen(word); i++){
-		if(word[i]=='\\'){
-			if(word[i+1]=='n'){
-				word[i] = '\n';
-			} else if(word[i+1]=='0'){
-				word[i] = '\0';	
-				if(word[0] == '\0'){
-					return;
-				}
-			} else{
-				word[i] = word[i+1];
-			}
-			for(j = i+1; j < strlen(word)-1; j++){
-				word[j] = word[j+1];
-			}
-			if(strlen(word) != 0){
-				word[j] = '\0';
-			}
-		}
-        }
-	//printf("%s\n", word);
-	}
-}*/
 
 int scan(char *file){
 	extern FILE * yyin;

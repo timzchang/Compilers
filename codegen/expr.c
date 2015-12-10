@@ -962,17 +962,37 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_EQ:
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
-		fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
-		fprintf(output, "\tJE .L%d\n", label_count);
-		label_count++;
-		fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
-		fprintf(output, "\tJMP .L%d\n", label_count);
-		label_count++;
-		fprintf(output, ".L%d:\n", label_count-2);
-		fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
-		fprintf(output, ".L%d:\n", label_count-1);
-		e->reg = e->right->reg;
-		register_free(e->left->reg);
+		if(e->left->kind == EXPR_STRING && e->right->kind == EXPR_STRING){
+			fprintf(output, "\tPUSHQ %%r10\n");
+			fprintf(output, "\tPUSHQ %%r11\n");
+			fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->left->reg));
+			fprintf(output, "\tMOV %s, %%rsi\n", register_name(e->right->reg));
+			fprintf(output, "\tCALL strcmp\n");
+			fprintf(output, "\tPOPQ %%r11\n");
+			fprintf(output, "\tPOPQ %%r10\n");
+			fprintf(output, "\tCMP $0, %%rax\n");
+			fprintf(output, "\tJE .L%d\n", label_count);
+			label_count++;
+			fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+			fprintf(output, "\tJMP .L%d\n", label_count);
+			label_count++;
+			fprintf(output, ".L%d:\n", label_count-2);
+			fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+			e->reg = e->right->reg;
+			register_free(e->left->reg);
+		}else{
+			fprintf(output, "\tCMP %s, %s\n", register_name(e->left->reg), register_name(e->right->reg));
+			fprintf(output, "\tJE .L%d\n", label_count);
+			label_count++;
+			fprintf(output, "\tMOV $0, %s\n", register_name(e->right->reg));
+			fprintf(output, "\tJMP .L%d\n", label_count);
+			label_count++;
+			fprintf(output, ".L%d:\n", label_count-2);
+			fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+			fprintf(output, ".L%d:\n", label_count-1);
+			e->reg = e->right->reg;
+			register_free(e->left->reg);
+		}
 		break;
 	case EXPR_NE:
 		expr_codegen(e->left, output);
