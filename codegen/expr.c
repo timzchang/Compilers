@@ -978,7 +978,8 @@ void expr_codegen(struct expr *e, FILE *output){
 			label_count++;
 			fprintf(output, ".L%d:\n", label_count-2);
 			fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
-
+			fprintf(output, ".L%d:\n", label_count-1);
+			
 			e->reg = e->right->reg;
 			register_free(e->left->reg);
 		}else{
@@ -1014,6 +1015,7 @@ void expr_codegen(struct expr *e, FILE *output){
 			label_count++;
 			fprintf(output, ".L%d:\n", label_count-2);
 			fprintf(output, "\tMOV $1, %s\n", register_name(e->right->reg));
+			fprintf(output, ".L%d:\n", label_count-1);
 
 			e->reg = e->right->reg;
 			register_free(e->left->reg);
