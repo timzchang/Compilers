@@ -1044,7 +1044,7 @@ void expr_codegen(struct expr *e, FILE *output){
 			e->reg = register_alloc();
 			fprintf(output, "\tPUSHQ %%r10\n");
 			fprintf(output, "\tPUSHQ %%r11\n");
-			expr_codegen(e->right);
+			expr_codegen(e->right, output);
 			fprintf(output, "\tCALL %s\n", e->left->name);
 			for(i = arg_count-1;i>=0; i--){
 				fprintf(output, "\tPOPQ %s\n", arg_reg[i]);
