@@ -1033,6 +1033,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_FUNC:
+		arg_count = 0;
 		e->reg = register_alloc();
 		fprintf(output, "\tPUSHQ %%r10\n");
 		fprintf(output, "\tPUSHQ %%r11\n");

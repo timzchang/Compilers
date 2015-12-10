@@ -1,7 +1,11 @@
-gfx_color: function integer(h: integer);
-gfx_line: function integer(a: integer);
+gfx_color: function integer(h: integer, p: integer) = {
+	return h+p;
+}
+//gfx_line: function integer(a: integer);
+
+
 
 main: function integer(h: boolean) = {	
-	gfx_color(10);
+	gfx_color(10, 11);
 }
 
