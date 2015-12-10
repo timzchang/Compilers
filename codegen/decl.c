@@ -187,7 +187,7 @@ void decl_codegen(struct decl *d, FILE * output){
 				symbol_code(d->symbol, var_name);
 				fprintf(output, ".text\n.globl %s\n%s:\n", var_name, var_name);
 				fprintf(output, "\tPUSHQ %%rbp\n\tMOVQ %%rsp, %%rbp\n");
-				fprintf(output, "\tPUSHQ %%rdi\n\tPUSHQ %%rsi\n\tPUSHQ %%rdx\n\tPUSHQ %%rdi\n\tPUSHQ %%rcx\n\tPUSHQ %%r8\n\tPUSHQ %%r9\n");
+				fprintf(output, "\tPUSHQ %%rdi\n\tPUSHQ %%rsi\n\tPUSHQ %%rdx\n\tPUSHQ %%rcx\n\tPUSHQ %%r8\n\tPUSHQ %%r9\n");
 				if(d->symbol->local_count > 0){
 					fprintf(output, "\tSUBQ $%d, %%rsp\n", 8*d->symbol->local_count);
 				}
@@ -207,10 +207,14 @@ void decl_codegen(struct decl *d, FILE * output){
 	}else if(d->symbol->kind == SYMBOL_LOCAL){
 		switch(d->type->kind){
 		case TYPE_BOOLEAN:
-			break;
 		case TYPE_CHARACTER:
-			break;
 		case TYPE_INTEGER:
+			if(d->value){  // only codegen if there's stuff
+				expr_codegen(d->value, output);
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "\tMOVQ %s, %s\n", register_name(d->value->reg), var_name);
+				register_free(d->value->reg);
+			}
 			break;
 		case TYPE_STRING:
 			

@@ -236,7 +236,7 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		label_count++;
 		expr_codegen(s->expr, output);  // (i<10) or something
 		register_free(s->expr->reg);
-		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));
+		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));  // 
 		fprintf(output, "\tJE .L%d\n", label_count);
 		label_save1 = label_count;
 		// stuff

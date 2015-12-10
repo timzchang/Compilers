@@ -1018,9 +1018,6 @@ void expr_codegen(struct expr *e, FILE *output){
 		symbol_code(e->left->symbol,reg_name);
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
-	case EXPR_BRACKET:
-
-		break;
 	case EXPR_FUNC:
 
 		break;
@@ -1099,7 +1096,9 @@ void expr_print_codegen(struct expr *e, FILE *output){
 	fprintf(output, "\tPUSHQ %%r10\n");
 	fprintf(output, "\tPUSHQ %%r11\n");
 	fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->reg));
+
 	fprintf(output, "\tCALL print_%s\n", name);
+	
 	fprintf(output, "\tPOPQ %%r11\n");
 	fprintf(output, "\tPOPQ %%r10\n");
 	fprintf(output, "\tPOPQ %%rdi\n");
