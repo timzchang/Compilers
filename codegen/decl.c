@@ -222,7 +222,16 @@ void decl_codegen(struct decl *d, FILE * output){
 			}
 			break;
 		case TYPE_STRING:
-			
+			if(d->value){
+				expr_codegen(d->value, output);  // string is in d->value->reg
+				symbol_code(d->symbol, var_name);
+				fprintf(output, "\tMOVQ %s, %s\n", register_name(d->value->reg), var_name);
+				register_free(d->value->reg);
+			}else{
+				// fprintf(output, ".data\n");
+				// symbol_code(d->symbol, var_name);
+				// fprintf(output, "%s: .string \"\"\n", var_name);
+			}
 			break;
 		default:
 			printf("why you here?\n");
