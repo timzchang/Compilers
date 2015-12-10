@@ -217,7 +217,11 @@ void decl_codegen(struct decl *d, FILE * output){
 				register_free(d->value->reg);
 			}else{
 				symbol_code(d->symbol, var_name);
-				fprintf(output, "\tMOVQ $0, %s\n", var_name);
+				e = expr_create_integer_literal(0);
+				e->reg = register_alloc();
+				fprintf(output, "\tMOVQ $0, %s\n", register_name(e->reg));
+				fprintf(output, "\tMOVQ %s, %s\n", register_name(e->reg), var_name);
+				register_free(e->reg);
 			}
 			break;
 		case TYPE_STRING:

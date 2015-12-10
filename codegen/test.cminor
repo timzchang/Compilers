@@ -1,10 +1,8 @@
 f: function integer(h: integer);
 
 main: function integer(h: boolean) = {	
-	print f(10), "\n";
+	print 5+2;
+	print 5-2;
 }
 
-f: function integer(h: integer) = {
-	return h;
-}
 

@@ -843,9 +843,9 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_SUB:
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
-		fprintf(output, "\tSUB %s, %s\n",register_name(e->left->reg), register_name(e->right->reg));
-		e->reg = e->right->reg;
-		register_free(e->left->reg);
+		fprintf(output, "\tSUB %s, %s\n",register_name(e->right->reg), register_name(e->left->reg));
+		e->reg = e->left->reg;
+		register_free(e->right->reg);  // this might screw things up
 		break;
 	case EXPR_MULT:
 		expr_codegen(e->left, output);
@@ -1045,9 +1045,6 @@ void expr_codegen(struct expr *e, FILE *output){
 			expr_codegen(e->right, output);
 		}
 		fprintf(output, "\tCALL %s\n", e->left->name);
-		for(i = arg_count-1;i>=0; i--){
-			fprintf(output, "\tPOPQ %s\n", arg_reg[i]);
-		}
 		fprintf(output, "\tPOPQ %%r11\n");
 		fprintf(output, "\tPOPQ %%r10\n");
 		fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
@@ -1127,7 +1124,6 @@ void expr_print_codegen(struct expr *e, FILE *output){
 			exit(1);
 	}
 
-	fprintf(output, "\tPUSHQ %%rdi\n");
 	fprintf(output, "\tPUSHQ %%r10\n");
 	fprintf(output, "\tPUSHQ %%r11\n");
 	fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->reg));
@@ -1136,7 +1132,6 @@ void expr_print_codegen(struct expr *e, FILE *output){
 	
 	fprintf(output, "\tPOPQ %%r11\n");
 	fprintf(output, "\tPOPQ %%r10\n");
-	fprintf(output, "\tPOPQ %%rdi\n");
 	register_free(e->reg);
 }
 
