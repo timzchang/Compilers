@@ -829,6 +829,8 @@ int expr_is_constant(struct expr *a){
 void expr_codegen(struct expr *e, FILE *output){
 	if(!e) return;
 	char reg_name[200];
+	char arg_reg[6][100] = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
+	int i;
 	switch(e->kind){
 	case EXPR_ADD:
 		expr_codegen(e->left, output);
@@ -1030,7 +1032,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_FUNC:
-		if(!e->right){
+		/*if(!e->right){
 			e->reg = register_alloc();
 			fprintf(output, "\tPUSHQ %%r10\n");
 			fprintf(output, "\tPUSHQ %%r11\n");
@@ -1038,8 +1040,19 @@ void expr_codegen(struct expr *e, FILE *output){
 			fprintf(output, "\tPOPQ %%r11\n");
 			fprintf(output, "\tPOPQ %%r10\n");
 			fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
-
-		}
+		}else{*/
+			e->reg = register_alloc();
+			fprintf(output, "\tPUSHQ %%r10\n");
+			fprintf(output, "\tPUSHQ %%r11\n");
+			expr_codegen(e->right);
+			fprintf(output, "\tCALL %s\n", e->left->name);
+			for(i = arg_count-1;i>=0; i--){
+				fprintf(output, "\tPOPQ %s\n", arg_reg[i]);
+			}
+			fprintf(output, "\tPOPQ %%r11\n");
+			fprintf(output, "\tPOPQ %%r10\n");
+			fprintf(output, "\tMOV %%rax, %s\n", register_name(e->reg));
+		// }
 		break;
 	case EXPR_LIST:  // function calls and prints
 
