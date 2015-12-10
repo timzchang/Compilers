@@ -1053,8 +1053,23 @@ void expr_codegen(struct expr *e, FILE *output){
 		e_cursor = e;
 		while(e_cursor->right->kind == EXPR_LIST){
 			//generate push code
+			expr_codegen(e_cursor->left, output);
+			fprintf(output, "\tMOV %s, %s\n", register_name(e_cursor->left->reg), arg_reg[arg_count]);
 			// increment counter
+			arg_count++;
+			register_free(e_cursor->left->reg);
+			e_cursor = e_cursor->right;
 		}
+		expr_codegen(e_cursor->left, output);
+		fprintf(output, "\tMOV %s, %s\n", register_name(e_cursor->left->reg), arg_reg[arg_count]);
+		// increment counter
+		arg_count++;
+		register_free(e_cursor->left->reg);
+		expr_codegen(e_cursor->right, output);
+		fprintf(output, "\tMOV %s, %s\n", register_name(e_cursor->right->reg), arg_reg[arg_count]);
+		// increment counter
+		arg_count++;
+		register_free(e_cursor->right->reg);
 		break;
 	case EXPR_OR:
 		expr_codegen(e->left, output);
