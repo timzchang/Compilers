@@ -239,16 +239,14 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		fprintf(output, "\tCMP $0, %s\n", register_name(s->expr->reg));  // 
 		fprintf(output, "\tJE .L%d\n", label_count);
 		label_save1 = label_count;
+		label_count++;
 		// stuff
 		stmt_codegen(s->body, output);  // labelcount can be incremented in here
 		// end stuff
 		expr_codegen(s->next_expr, output);
 		register_free(s->next_expr->reg);
 		fprintf(output, "\tJMP .L%d\n", label_save);
-		
 		fprintf(output, ".L%d:\n", label_save1);
-		label_save1 = label_count;
-		label_count++;
 		break;
 	case STMT_PRINT:
 		//printf("I'm here\n");
