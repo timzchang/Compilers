@@ -1,4 +1,8 @@
 i: integer = 0;
 main: function integer(h: boolean) = {	
 	x: integer = 0;
+	y: integer = 5;
+	t: boolean;
+	print x, "\n", y, "\n", t;
+	//t = false;
 }
