@@ -275,11 +275,15 @@ void stmt_codegen(struct stmt *s, FILE *output){
 		}
 		break;
 	case STMT_RETURN:
-		expr_codegen(s->expr, output);
-		fprintf(output, "\tMOV %s, %%rax\n", register_name(s->expr->reg));
-		// need return statement. Do we just label the postamble always?
-		fprintf(output, "\tjmp .RET%d\n", ret_count);
-		register_free(s->expr->reg);
+		if(s->expr){
+			expr_codegen(s->expr, output);
+			fprintf(output, "\tMOV %s, %%rax\n", register_name(s->expr->reg));
+			// need return statement. Do we just label the postamble always?
+			register_free(s->expr->reg);
+			fprintf(output, "\tjmp .RET%d\n", ret_count);
+		}else{
+			fprintf(output, "\tjmp .RET%d\n", ret_count);
+		}
 		break;
 	case STMT_BLOCK:
 		stmt_codegen(s->body, output);

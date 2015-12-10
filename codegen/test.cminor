@@ -1,4 +1,11 @@
+f: function integer();
+
 main: function integer(h: boolean) = {	
-	s: string;
-	print s;
+	print f(), "\n";
 }
+
+f: function integer() = {
+//	print "hello world\n";
+	return 10;
+}
+
