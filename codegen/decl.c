@@ -233,7 +233,7 @@ void decl_codegen(struct decl *d, FILE * output){
 				// get_string(e, output);
 				fprintf(output, "\n.text\n");
 				symbol_code(d->symbol, var_name);
-				fprintf(output, "LEA .STR%d, %s\n", str_count, var_name);
+				fprintf(output, "\tLEA .STR%d, %s\n", str_count, var_name);
 				str_count++;
 			}
 			break;

@@ -1,4 +1,4 @@
 main: function integer(h: boolean) = {	
-	s: string = "hello world\n";
+	s: string;
 	print s;
 }
