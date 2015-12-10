@@ -892,10 +892,6 @@ void expr_codegen(struct expr *e, FILE *output){
 		break;
 	case EXPR_ASSGN:
 		expr_codegen(e->right, output);
-		//expr_print(e->right);
-		//printf("\n");
-		//expr_print(e->left);
-		//printf("\nhere\n");
 		symbol_code(e->left->symbol, reg_name);
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
 		e->reg = e->right->reg;
@@ -1002,7 +998,22 @@ void expr_codegen(struct expr *e, FILE *output){
 		e->reg = e->right->reg;
 		break;
 	case EXPR_EXP:
-
+		expr_codegen(e->left, output);
+		expr_codegen(e->right, output);
+		fprintf(output, "\tPUSHQ %%rdi\n");
+		fprintf(output, "\tPUSHQ %%rsi\n");
+		fprintf(output, "\tPUSHQ %%r10\n");
+		fprintf(output, "\tPUSHQ %%r11\n");
+		fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->left->reg));
+		fprintf(output, "\tMOV %s, %%rsi\n", register_name(e->right->reg));
+		fprintf(output, "\tCALL integer_power\n");
+		fprintf(output, "\tPOPQ %%r11\n");
+		fprintf(output, "\tPOPQ %%r10\n");
+		fprintf(output, "\tPOPQ %%rsi\n");
+		fprintf(output, "\tPOPQ %%rdi\n");
+		fprintf(output, "\tMOV %%rax, %s\n", register_name(e->right->reg));
+		e->reg = e->right->reg;
+		register_free(e->left->reg);
 		break;
 	case EXPR_INCR:
 		expr_codegen(e->left, output);
@@ -1019,7 +1030,13 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV %s, %s\n", register_name(e->left->reg), reg_name);
 		break;
 	case EXPR_FUNC:
-
+		if(!e->right){
+			fprintf(output, "\tPUSHQ %%r10\n");
+			fprintf(output, "\tPUSHQ %%r11\n");
+			fprintf(output, "\tCALL %s\n", e->left->string_literal);
+			fprintf(output, "\tPOPQ %%r11\n");
+			fprintf(output, "\tPOPQ %%r10\n");
+		}
 		break;
 	case EXPR_LIST:  // function calls and prints
 
