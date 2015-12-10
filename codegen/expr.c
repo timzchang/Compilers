@@ -1036,7 +1036,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		e->reg = register_alloc();
 		fprintf(output, "\tPUSHQ %%r10\n");
 		fprintf(output, "\tPUSHQ %%r11\n");
-		if(e->right->kind != EXPR_LIST){
+		if(e->right && e->right->kind != EXPR_LIST){
 			expr_codegen(e->right, output);
 			fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->right->reg));
 			arg_count++;

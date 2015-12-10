@@ -1,11 +1,10 @@
-f: function integer();
+f: function integer(h: integer);
 
 main: function integer(h: boolean) = {	
-	print f(), "\n";
+	print f(10), "\n";
 }
 
-f: function integer() = {
-//	print "hello world\n";
-	return 10;
+f: function integer(h: integer) = {
+	return h;
 }
 
