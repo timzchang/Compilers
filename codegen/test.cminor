@@ -1,0 +1,14 @@
+
+f: function integer();
+
+main: function void() = {
+	q: string;
+	return;
+}
+
+f: function integer() = {
+	a: integer;
+	a = 5;
+	return a;
+}
+
