@@ -870,7 +870,7 @@ void expr_codegen(struct expr *e, FILE *output){
 		e->reg = register_alloc();
 		symbol_code(e->symbol, reg_name);
 		if(e->symbol->kind == SYMBOL_GLOBAL && e->symbol->type->kind == TYPE_STRING){
-			fprintf(output, "\tLEA %s, %s\n", reg_name, register_name(e->reg));
+			fprintf(output, "\tMOV .%s_address, %s\n", reg_name, register_name(e->reg));
 		}else{
 			fprintf(output, "\tMOV %s, %s\n", reg_name, register_name(e->reg));
 		}
@@ -898,10 +898,17 @@ void expr_codegen(struct expr *e, FILE *output){
 		fprintf(output, "\tMOV $%d, %s\n", e->literal_value, register_name(e->reg));
 		break;
 	case EXPR_ASSGN:
-		expr_codegen(e->right, output);
-		symbol_code(e->left->symbol, reg_name);
-		fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
-		e->reg = e->right->reg;
+		if(e->left->symbol->kind == SYMBOL_GLOBAL && e->left->symbol->type->kind == TYPE_STRING){
+			expr_codegen(e->right, output);
+			symbol_code(e->left->symbol, reg_name);
+			fprintf(output, "\tMOV %s, .%s_address\n", register_name(e->right->reg), reg_name);
+			e->reg = e->right->reg;
+		}else{
+			expr_codegen(e->right, output);
+			symbol_code(e->left->symbol, reg_name);
+			fprintf(output, "\tMOV %s, %s\n", register_name(e->right->reg), reg_name);
+			e->reg = e->right->reg;
+		}
 		break;
 	case EXPR_GT:
 		expr_codegen(e->left, output);

@@ -178,10 +178,12 @@ void decl_codegen(struct decl *d, FILE * output){
 				fprintf(output, "%s: .string ", var_name);
 				get_string(d->value, output);
 				fprintf(output, "\n");
+				fprintf(output, ".%s_address: .quad %s\n", var_name, var_name);
 			}else{
 				fprintf(output, ".data\n");
 				symbol_code(d->symbol, var_name);
 				fprintf(output, "%s: .string \"\"\n", var_name);
+				fprintf(output, ".%s_address: .quad %s\n", var_name, var_name);
 			}
 		case TYPE_FUNCTION:
 			if(d->code){
