@@ -1,0 +1,5 @@
+// return bool
+
+main: function boolean(h:integer) = {
+	return true;
+}

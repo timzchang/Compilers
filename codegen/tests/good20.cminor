@@ -1,0 +1,8 @@
+// reassign global
+
+a: integer = 5;
+main: function integer() = {
+	print a, '\n';
+	a = 3;
+	print a, '\n';
+}

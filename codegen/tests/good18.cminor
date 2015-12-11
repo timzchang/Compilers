@@ -1,0 +1,9 @@
+//comparing local and global strings
+
+a: string = "h";
+
+main: function void() = {
+	h: string = "h";
+	print h==a;
+	return;
+}

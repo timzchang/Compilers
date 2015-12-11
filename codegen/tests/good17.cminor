@@ -1,0 +1,7 @@
+// what if a string was called str0?
+
+str0: string = "hi";
+
+main: function void() = {
+	local1: integer = 5;
+}

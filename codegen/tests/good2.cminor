@@ -1,0 +1,5 @@
+// return char
+
+main: function char(h:integer) = {
+	return '\0';
+}

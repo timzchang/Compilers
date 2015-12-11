@@ -1,0 +1,8 @@
+// print global string
+
+a: string = "this global\n";
+
+main: function void() = {
+
+	print a;
+}

@@ -1,0 +1,5 @@
+// returning an int
+
+main: function integer(h: integer) = {
+	return 1;
+}
