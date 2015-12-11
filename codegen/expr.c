@@ -1003,7 +1003,7 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_NE:
 		expr_codegen(e->left, output);
 		expr_codegen(e->right, output);
-		if(e->left->kind == EXPR_STRING && e->right->kind == EXPR_STRING){
+		if((e->left->kind == EXPR_STRING && e->right->kind == EXPR_STRING) || (e->left->kind == EXPR_NAME && e->left->type->kind == TYPE_STRING)){
 			fprintf(output, "\tPUSHQ %%r10\n");
 			fprintf(output, "\tPUSHQ %%r11\n");
 			fprintf(output, "\tMOV %s, %%rdi\n", register_name(e->left->reg));

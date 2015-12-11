@@ -228,7 +228,7 @@ void decl_codegen(struct decl *d, FILE * output){
 			if(d->value){
 				expr_codegen(d->value, output);  // string is in d->value->reg
 				symbol_code(d->symbol, var_name);
-				fprintf(output, "\tMOVQ %s, %s\n", register_name(d->value->reg), var_name);
+				fprintf(output, "\tMOV %s, %s\n", register_name(d->value->reg), var_name);
 				register_free(d->value->reg);
 			}else{
 				e = expr_create_string_literal("");
