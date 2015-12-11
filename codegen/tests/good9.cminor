@@ -1,0 +1,17 @@
+// nested for
+
+main: function boolean(h:integer) = {
+	i: integer = 0;
+	j: integer;
+	result: integer = 0;
+	for(i=0;i<10;i++){
+		for(j=0;j<10;j++){
+			result++;
+		}
+	}
+	if(result <100){
+		return false;
+	}else{
+		return true;
+	}
+}

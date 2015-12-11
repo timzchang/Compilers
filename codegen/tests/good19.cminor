@@ -1,0 +1,9 @@
+// bool checks
+
+main: function void() = {
+	print true || true, '\n';
+	print true && true, '\n';
+	print true || false, '\n';
+	print true && false, '\n';
+	print (true && false) || false, '\n';
+}

@@ -1,4 +1,4 @@
-all: cminor exec
+all: cminor 
 target = cminor
 
 exec: out.s library.o

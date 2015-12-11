@@ -1,0 +1,5 @@
+// printing
+
+main: function integer() = {
+	printf "yo ", "hey ", 5, '\n', true;
+}

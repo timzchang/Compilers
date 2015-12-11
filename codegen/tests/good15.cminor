@@ -1,0 +1,9 @@
+// double assign
+
+main: function integer() = {
+	a: integer;
+	b: integer;
+
+	a = b = 10;
+	print a, '\n', b, '\n';
+}

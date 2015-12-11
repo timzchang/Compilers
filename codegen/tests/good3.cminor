@@ -1,0 +1,5 @@
+// return string
+
+main: function string(h: string) = {
+	return "haiaiaiai";
+}

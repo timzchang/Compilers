@@ -1,0 +1,7 @@
+// all arithmetic
+
+main: function boolean(h:integer) = {
+	print 1+1-2/3*3 + (44-2)/7^3;
+	
+	return false;
+}

@@ -1,0 +1,14 @@
+// nested if
+
+main: function boolean(h:integer) = {
+	if(true){
+		if(false){
+			
+		}else{
+			return true;
+		}	
+	}else{
+
+	}	
+	return false;
+}

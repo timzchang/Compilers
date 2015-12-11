@@ -1,0 +1,18 @@
+//recursion
+
+rf: function void(index: integer) = {
+	if(index>10){
+		return;
+	}
+	j: integer;
+	for(j=0; j<index; j++){
+		print "recursion ";
+	}
+	print '\n';
+	rf(index+1);
+}
+
+
+main: function void() = {
+	rf(0);
+}

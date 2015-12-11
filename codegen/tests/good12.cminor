@@ -1,0 +1,5 @@
+//local variables or something
+
+main: function integer() = {
+	a: string = "this is a local variable\n";
+}

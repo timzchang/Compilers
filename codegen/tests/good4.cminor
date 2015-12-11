@@ -1,0 +1,5 @@
+// return void
+
+main: function void(h:integer) = {
+	return;
+}

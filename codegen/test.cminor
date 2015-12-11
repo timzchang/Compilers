@@ -1,7 +1,0 @@
-s: string = "hello";
-main: function integer(h: boolean) = {
-	s1: string = "h";
-	s2: string = "h";
-	print s1 == s2, "\n";
-}
-

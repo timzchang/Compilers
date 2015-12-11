@@ -1,0 +1,11 @@
+// compare strings
+
+main: function boolean(h:integer) = {
+	print  "h" == "h", '\n';
+	print "h" != "h", '\n';
+	h: string = "haha";
+	h1: string = "dhdh";
+	print h == h1, '\n';
+	print h != h1, '\n';
+	return false;
+}

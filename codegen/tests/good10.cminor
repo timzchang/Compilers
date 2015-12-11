@@ -1,0 +1,10 @@
+// infiniti for
+
+main: function boolean(h:integer) = {
+	i: integer = 0;
+	j: integer;
+	result: integer = 0;
+	for(;;){
+		print "this is an infiniti loop\n";
+	}
+}
