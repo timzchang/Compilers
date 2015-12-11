@@ -78,6 +78,7 @@ void decl_resolve(struct decl *d){
 					scope_enter();
 					param_list_resolve(d->type->params);
 					stmt_resolve(d->code);
+					d->symbol->local_count = which_local();
 					scope_leave();
 				}
 			}else{
