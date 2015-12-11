@@ -869,7 +869,11 @@ void expr_codegen(struct expr *e, FILE *output){
 	case EXPR_NAME:
 		e->reg = register_alloc();
 		symbol_code(e->symbol, reg_name);
-		fprintf(output, "\tMOV %s, %s\n", reg_name, register_name(e->reg));
+		if(e->symbol->kind == SYMBOL_GLOBAL && e->symbol->type->kind == TYPE_STRING){
+			fprintf(output, "\tLEA %s, %s\n", reg_name, register_name(e->reg));
+		}else{
+			fprintf(output, "\tMOV %s, %s\n", reg_name, register_name(e->reg));
+		}
 		break;
 	case EXPR_STRING:
 		e->reg = register_alloc();

@@ -1,13 +1,7 @@
+s: string = "hello";
 main: function integer(h: boolean) = {
-	if("h" != "h"){
-		print 1, '\n';
-		return 1;
-	}else{
-		print 0, '\n';
-		return 0;
-	}
-
-	//"h" == "h";
-	//return 1;
+	s1: string = "h";
+	s2: string = "h";
+	print s1 == s2, "\n";
 }
 
